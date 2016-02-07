@@ -1,38 +1,38 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-	<parent>
-		<groupId>org.sct.arquillian</groupId>
-		<artifactId>arquillian-service-call-tracker-extension</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
-	</parent>
+    <parent>
+        <groupId>org.sct.arquillian</groupId>
+        <artifactId>arquillian-service-call-tracker-extension</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
 
-	<artifactId>arquillian-service-call-tracker-extension-impl</artifactId>
+    <artifactId>arquillian-service-call-tracker-extension-impl</artifactId>
 
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-		<!-- Testing deps -->
-		<version.weld.arquillian>1.0.0.CR8</version.weld.arquillian>
-		<version.weld>1.0.1-Final</version.weld>
-		<version.openejb>1.1.6</version.openejb>
-		<version.openejb.arquillian>1.1.6</version.openejb.arquillian>
-	</properties>
+        <!-- Testing deps -->
+        <version.weld.arquillian>1.0.0.CR8</version.weld.arquillian>
+        <version.weld>1.0.1-Final</version.weld>
+        <version.openejb>1.1.6</version.openejb>
+        <version.openejb.arquillian>1.1.6</version.openejb.arquillian>
+    </properties>
 
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-failsafe-plugin</artifactId>
-				<configuration>
-				    <skip>false</skip>
-					<systemPropertyVariables>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <configuration>
+                    <skip>false</skip>
+                    <systemPropertyVariables>
                         <!--<asct.maven.config>${asct.maven.config}</asct.maven.config> @todo this is ugly-->
-					</systemPropertyVariables>
-				</configuration>
-			</plugin>
-			<plugin>
+                    </systemPropertyVariables>
+                </configuration>
+            </plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
@@ -44,353 +44,357 @@
                     </systemPropertyVariables>
                 </configuration>
             </plugin>
-			
-			
-		</plugins>
-	</build>
 
-	<dependencyManagement>
-		<dependencies>
 
-			<dependency>
-				<groupId>org.apache.openwebbeans</groupId>
-				<artifactId>openwebbeans</artifactId>
-				<version>1.0.0</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
+        </plugins>
+    </build>
 
-		</dependencies>
-	</dependencyManagement>
+    <dependencyManagement>
+        <dependencies>
 
-	<dependencies>
+            <dependency>
+                <groupId>org.apache.openwebbeans</groupId>
+                <artifactId>openwebbeans</artifactId>
+                <version>1.0.0</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
 
-		<!-- ================== -->
-		<!-- business -->
-		<!-- ================== -->
+        </dependencies>
+    </dependencyManagement>
 
-		<dependency>
-			<groupId>commons-io</groupId>
-			<artifactId>commons-io</artifactId>
-			<version>2.4</version>
-		</dependency>
-		
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>arquillian-service-call-tracker-extension-api</artifactId>
-			<version>${project.version}</version>
-		</dependency>
+    <dependencies>
 
-		<dependency>
-			<groupId>org.sct</groupId>
-			<artifactId>service-call-tracker-api</artifactId>
-			<version>${version.org.sct}</version>
-		</dependency>
+        <!-- ================== -->
+        <!-- business -->
+        <!-- ================== -->
 
-		<dependency>
-			<groupId>org.sct</groupId>
-			<artifactId>service-call-tracker-impl</artifactId>
-			<version>${version.org.sct}</version>
-		</dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.4</version>
+        </dependency>
 
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>arquillian-service-call-tracker-extension-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.sct</groupId>
+            <artifactId>service-call-tracker-api</artifactId>
+            <version>${version.org.sct}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.sct</groupId>
+            <artifactId>service-call-tracker-impl</artifactId>
+            <version>${version.org.sct}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
             <version>1.7.0</version>
-		</dependency>
+        </dependency>
 
-		<!-- ================== -->
-		<!-- arquillian core -->
-		<!-- ================== -->
+        <!-- ================== -->
+        <!-- arquillian core -->
+        <!-- ================== -->
 
-		<dependency>
-			<groupId>org.jboss.shrinkwrap.descriptors</groupId>
-			<artifactId>shrinkwrap-descriptors-impl-javaee</artifactId>
-			<scope>compile</scope>
-		</dependency>
+        <dependency>
+            <groupId>org.jboss.shrinkwrap.descriptors</groupId>
+            <artifactId>shrinkwrap-descriptors-impl-javaee</artifactId>
+            <scope>compile</scope>
+        </dependency>
 
-		<dependency>
-			<groupId>org.jboss.arquillian.config</groupId>
-			<artifactId>arquillian-config-api</artifactId>
-			<scope>provided</scope>
-		</dependency>
+        <dependency>
+            <groupId>org.jboss.arquillian.config</groupId>
+            <artifactId>arquillian-config-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
 
-		<dependency>
-			<groupId>org.jboss.arquillian.container</groupId>
-			<artifactId>arquillian-container-spi</artifactId>
-			<scope>compile</scope>
-		</dependency>
+        <dependency>
+            <groupId>org.jboss.arquillian.container</groupId>
+            <artifactId>arquillian-container-spi</artifactId>
+            <scope>compile</scope>
+        </dependency>
 
-		<dependency>
-			<groupId>org.jboss.arquillian.core</groupId>
-			<artifactId>arquillian-core-spi</artifactId>
-			<scope>compile</scope>
-		</dependency>
+        <dependency>
+            <groupId>org.jboss.arquillian.core</groupId>
+            <artifactId>arquillian-core-spi</artifactId>
+            <scope>compile</scope>
+        </dependency>
 
-		<dependency>
-			<groupId>org.jboss.arquillian.test</groupId>
-			<artifactId>arquillian-test-spi</artifactId>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.jboss.arquillian.container</groupId>
-			<artifactId>arquillian-container-test-spi</artifactId>
-			<scope>compile</scope>
-		</dependency>
+        <dependency>
+            <groupId>org.jboss.arquillian.test</groupId>
+            <artifactId>arquillian-test-spi</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.arquillian.container</groupId>
+            <artifactId>arquillian-container-test-spi</artifactId>
+            <scope>compile</scope>
+        </dependency>
 
-		<dependency>
-			<groupId>org.jboss.shrinkwrap.resolver</groupId>
-			<artifactId>shrinkwrap-resolver-depchain</artifactId>
-			<type>pom</type>
-			<scope>compile</scope>
-		</dependency>
+        <dependency>
+            <groupId>org.jboss.shrinkwrap.resolver</groupId>
+            <artifactId>shrinkwrap-resolver-depchain</artifactId>
+            <type>pom</type>
+            <scope>compile</scope>
+        </dependency>
 
-		<dependency>
-			<groupId>org.jboss.shrinkwrap</groupId>
-			<artifactId>shrinkwrap-impl-base</artifactId>
-			<scope>compile</scope>
-		</dependency>
+        <dependency>
+            <groupId>org.jboss.shrinkwrap</groupId>
+            <artifactId>shrinkwrap-impl-base</artifactId>
+            <scope>compile</scope>
+        </dependency>
 
-		<dependency>
-			<groupId>org.jboss.shrinkwrap.descriptors</groupId>
-			<artifactId>shrinkwrap-descriptors-api-base</artifactId>
-		</dependency>
+        <dependency>
+            <groupId>org.jboss.shrinkwrap.descriptors</groupId>
+            <artifactId>shrinkwrap-descriptors-api-base</artifactId>
+        </dependency>
 
-		<dependency>
-			<groupId>org.reflections</groupId>
-			<artifactId>reflections</artifactId>
-		</dependency>
+        <dependency>
+            <groupId>org.reflections</groupId>
+            <artifactId>reflections</artifactId>
+        </dependency>
 
-		<!-- Workaround solution needs junit at compile time TODO: (only @RunWith 
-			annotation is required ...) -->
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<scope>compile</scope>
-		</dependency>
+        <!-- Workaround solution needs junit at compile time TODO: (only @RunWith
+            annotation is required ...) -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>compile</scope>
+        </dependency>
 
-		<!-- ================== -->
-		<!-- test -->
-		<!-- ================== -->
+        <!-- ================== -->
+        <!-- test -->
+        <!-- ================== -->
 
-		<dependency>
-			<groupId>org.jboss.arquillian.junit</groupId>
-			<artifactId>arquillian-junit-container</artifactId>
-			<scope>test</scope>
-		</dependency>
+        <dependency>
+            <groupId>org.jboss.arquillian.junit</groupId>
+            <artifactId>arquillian-junit-container</artifactId>
+            <scope>test</scope>
+        </dependency>
 
-		<dependency>
-			<groupId>org.sct</groupId>
-			<artifactId>service-call-tracker-impl</artifactId>
-			<version>${version.org.sct}</version>
-			<scope>test</scope>
-		</dependency>
+        <dependency>
+            <groupId>org.sct</groupId>
+            <artifactId>service-call-tracker-impl</artifactId>
+            <version>${version.org.sct}</version>
+            <scope>test</scope>
+        </dependency>
 
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-simple</artifactId>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
             <version>1.7.0</version>
-		</dependency>
-		<dependency>
-			<groupId>org.jboss.arquillian.container</groupId>
-			<artifactId>arquillian-container-test-impl-base</artifactId>
-			<version>1.1.3.Final</version>
-		</dependency>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.arquillian.container</groupId>
+            <artifactId>arquillian-container-test-impl-base</artifactId>
+            <version>1.1.3.Final</version>
+        </dependency>
 
 
-		<!--<dependency>-->
-			<!--<groupId>org.jboss.arquillian.container</groupId>-->
-			<!--<artifactId>arquillian-openwebbeans-embedded-1</artifactId>-->
-			<!--<version>1.0.0.CR2</version>-->
-		<!--</dependency>-->
-		<!--<dependency>-->
-			<!--<groupId>org.apache.openwebbeans</groupId>-->
-			<!--<artifactId>openwebbeans-spi</artifactId>-->
-		<!--</dependency>-->
-		<!--<dependency>-->
-			<!--<groupId>org.apache.openwebbeans</groupId>-->
-			<!--<artifactId>openwebbeans-impl</artifactId>-->
-		<!--</dependency>-->
-		<!--<dependency>-->
-			<!--<groupId>org.apache.geronimo.specs</groupId>-->
-			<!--<artifactId>geronimo-el_2.2_spec</artifactId>-->
-		<!--</dependency>-->
-		<!--<dependency>-->
-			<!--<groupId>org.apache.geronimo.specs</groupId>-->
-			<!--<artifactId>geronimo-jta_1.1_spec</artifactId>-->
-		<!--</dependency>-->
-		<!--<dependency>-->
-			<!--<groupId>org.apache.geronimo.specs</groupId>-->
-			<!--<artifactId>geronimo-validation_1.0_spec</artifactId>-->
-		<!--</dependency>-->
-		<!--<dependency>-->
-			<!--<groupId>org.apache.geronimo.specs</groupId>-->
-			<!--<artifactId>geronimo-interceptor_1.1_spec</artifactId>-->
-		<!--</dependency>-->
-		<!--<dependency>-->
-			<!--<groupId>org.apache.geronimo.specs</groupId>-->
-			<!--<artifactId>geronimo-jcdi_1.0_spec</artifactId>-->
-		<!--</dependency>-->
-		<!--<dependency>-->
-			<!--<groupId>org.apache.geronimo.specs</groupId>-->
-			<!--<artifactId>geronimo-atinject_1.0_spec</artifactId>-->
-		<!--</dependency>-->
-		<!--<dependency>-->
-			<!--<groupId>org.apache.geronimo.specs</groupId>-->
-			<!--<artifactId>geronimo-servlet_2.5_spec</artifactId>-->
-		<!--</dependency>-->
+        <!--<dependency>-->
+        <!--<groupId>org.jboss.arquillian.container</groupId>-->
+        <!--<artifactId>arquillian-openwebbeans-embedded-1</artifactId>-->
+        <!--<version>1.0.0.CR2</version>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+        <!--<groupId>org.apache.openwebbeans</groupId>-->
+        <!--<artifactId>openwebbeans-spi</artifactId>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+        <!--<groupId>org.apache.openwebbeans</groupId>-->
+        <!--<artifactId>openwebbeans-impl</artifactId>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+        <!--<groupId>org.apache.geronimo.specs</groupId>-->
+        <!--<artifactId>geronimo-el_2.2_spec</artifactId>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+        <!--<groupId>org.apache.geronimo.specs</groupId>-->
+        <!--<artifactId>geronimo-jta_1.1_spec</artifactId>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+        <!--<groupId>org.apache.geronimo.specs</groupId>-->
+        <!--<artifactId>geronimo-validation_1.0_spec</artifactId>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+        <!--<groupId>org.apache.geronimo.specs</groupId>-->
+        <!--<artifactId>geronimo-interceptor_1.1_spec</artifactId>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+        <!--<groupId>org.apache.geronimo.specs</groupId>-->
+        <!--<artifactId>geronimo-jcdi_1.0_spec</artifactId>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+        <!--<groupId>org.apache.geronimo.specs</groupId>-->
+        <!--<artifactId>geronimo-atinject_1.0_spec</artifactId>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+        <!--<groupId>org.apache.geronimo.specs</groupId>-->
+        <!--<artifactId>geronimo-servlet_2.5_spec</artifactId>-->
+        <!--</dependency>-->
 
 
-	</dependencies>
-	<profiles>
+    </dependencies>
+    <profiles>
 
 
-		<profile>
-			<id>wildfy81-embedded</id>
-			<activation><activeByDefault>true</activeByDefault></activation>
-			<!-- the dependencies for Wildfly8.1  -->
-			<dependencies>
-				<dependency>
-					<groupId>org.wildfly</groupId>
-					<artifactId>wildfly-arquillian-container-embedded</artifactId>
-					<version>8.1.0.Final</version>
-					<scope>test</scope>
-				</dependency>
-				<dependency>
-					<groupId>org.wildfly</groupId>
-					<artifactId>wildfly-embedded</artifactId>
-					<version>8.1.0.Final</version>
-					<scope>test</scope>
-				</dependency>
-			</dependencies>
+        <profile>
+            <id>wildfy81-embedded</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <!-- the dependencies for Wildfly8.1  -->
+            <dependencies>
+                <dependency>
+                    <groupId>org.wildfly</groupId>
+                    <artifactId>wildfly-arquillian-container-embedded</artifactId>
+                    <version>8.1.0.Final</version>
+                    <scope>test</scope>
+                </dependency>
+                <dependency>
+                    <groupId>org.wildfly</groupId>
+                    <artifactId>wildfly-embedded</artifactId>
+                    <version>8.1.0.Final</version>
+                    <scope>test</scope>
+                </dependency>
+            </dependencies>
 
-			<build>
-				<plugins>
-					<!-- You need the maven dependency plugin to download locally a zip with the server, unless you provide your own, it will download under the /target directory -->
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-dependency-plugin</artifactId>
-						<version>2.8</version>
-						<executions>
-							<execution>
-								<id>unpack</id>
-								<phase>process-test-classes</phase>
-								<goals>
-									<goal>unpack</goal>
-								</goals>
-								<configuration>
-									<artifactItems>
-										<artifactItem>
-											<groupId>org.wildfly</groupId>
-											<artifactId>wildfly-dist</artifactId>
-											<version>8.1.0.Final</version>
-											<type>zip</type>
-											<overWrite>false</overWrite>
-											<outputDirectory>target</outputDirectory>
-										</artifactItem>
-									</artifactItems>
-								</configuration>
-							</execution>
-						</executions>
-					</plugin>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-surefire-plugin</artifactId>
-						<version>2.17</version>
-						<configuration>
-							<!-- Fork every test because it will launch a separate AS instance -->
-							<forkMode>always</forkMode>
-							<systemPropertyVariables>
-								<java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
-								<!-- the maven dependency plugin will have already downloaded the server on /target -->
-								<jboss.home>${project.basedir}/target/wildfly-8.1.0.Final</jboss.home>
-								<module.path>${project.basedir}/target/wildfly-8.1.0.Final/modules</module.path>
-							</systemPropertyVariables>
-							<redirectTestOutputToFile>false</redirectTestOutputToFile>
-						</configuration>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
+            <build>
+                <plugins>
+                    <!-- You need the maven dependency plugin to download locally a zip with the server, unless you provide your own, it will download under the /target directory -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-dependency-plugin</artifactId>
+                        <version>2.8</version>
+                        <executions>
+                            <execution>
+                                <id>unpack</id>
+                                <phase>process-test-classes</phase>
+                                <goals>
+                                    <goal>unpack</goal>
+                                </goals>
+                                <configuration>
+                                    <artifactItems>
+                                        <artifactItem>
+                                            <groupId>org.wildfly</groupId>
+                                            <artifactId>wildfly-dist</artifactId>
+                                            <version>8.1.0.Final</version>
+                                            <type>zip</type>
+                                            <overWrite>false</overWrite>
+                                            <outputDirectory>target</outputDirectory>
+                                        </artifactItem>
+                                    </artifactItems>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <version>2.17</version>
+                        <configuration>
+                            <!-- Fork every test because it will launch a separate AS instance -->
+                            <forkMode>always</forkMode>
+                            <systemPropertyVariables>
+                                <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
+                                <!-- the maven dependency plugin will have already downloaded the server on /target -->
+                                <jboss.home>${project.basedir}/target/wildfly-8.1.0.Final</jboss.home>
+                                <module.path>${project.basedir}/target/wildfly-8.1.0.Final/modules</module.path>
+                            </systemPropertyVariables>
+                            <redirectTestOutputToFile>false</redirectTestOutputToFile>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
 
-		<profile>
-			<id>weld-ee-embedded-1.1</id>
+        <profile>
+            <id>weld-ee-embedded-1.1</id>
 
-			<dependencies>
-				<dependency>
-					<groupId>org.jboss.weld.arquillian.container</groupId>
-					<artifactId>arquillian-weld-ee-embedded-1.1</artifactId>
-					<version>1.1.2.Final</version>
-				</dependency>
-				<dependency>
-					<groupId>org.jboss.weld</groupId>
-					<artifactId>weld-core</artifactId>
+            <dependencies>
+                <dependency>
+                    <groupId>org.jboss.weld.arquillian.container</groupId>
+                    <artifactId>arquillian-weld-ee-embedded-1.1</artifactId>
+                    <version>1.1.2.Final</version>
+                </dependency>
+                <dependency>
+                    <groupId>org.jboss.weld</groupId>
+                    <artifactId>weld-core</artifactId>
 
-				</dependency>
-				<dependency>
-					<groupId>org.jboss.weld</groupId>
-					<artifactId>weld-api</artifactId>
+                </dependency>
+                <dependency>
+                    <groupId>org.jboss.weld</groupId>
+                    <artifactId>weld-api</artifactId>
 
-				</dependency>
-				<dependency>
-					<groupId>org.slf4j</groupId>
-					<artifactId>slf4j-simple</artifactId>
-				</dependency>
+                </dependency>
+                <dependency>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-simple</artifactId>
+                </dependency>
 
-				<dependency>
-					<groupId>javax.el</groupId>
-					<artifactId>el-api</artifactId>
-					<version>2.2</version>
-					<scope>test</scope>
-				</dependency>
-				<dependency>
-					<groupId>org.glassfish.web</groupId>
-					<artifactId>el-impl</artifactId>
-					<version>2.1.2-b04</version>
-					<scope>test</scope>
-				</dependency>
-				<dependency>
-					<groupId>org.jboss.spec.javax.servlet</groupId>
-					<artifactId>jboss-servlet-api_3.0_spec</artifactId>
-					<version>1.0.0.Beta2</version>
-					<scope>test</scope>
-				</dependency>
-				<dependency>
-					<groupId>javax.validation</groupId>
-					<artifactId>validation-api</artifactId>
-					<version>1.0.0.GA</version>
-					<scope>test</scope>
-				</dependency>
-				<dependency>
-					<groupId>javax.transaction</groupId>
-					<artifactId>jta</artifactId>
-					<version>1.1</version>
-					<scope>test</scope>
-				</dependency>
-				<dependency>
-					<groupId>javax.persistence</groupId>
-					<artifactId>persistence-api</artifactId>
-					<version>1.0</version>
-					<scope>test</scope>
-				</dependency>
+                <dependency>
+                    <groupId>javax.el</groupId>
+                    <artifactId>el-api</artifactId>
+                    <version>2.2</version>
+                    <scope>test</scope>
+                </dependency>
+                <dependency>
+                    <groupId>org.glassfish.web</groupId>
+                    <artifactId>el-impl</artifactId>
+                    <version>2.1.2-b04</version>
+                    <scope>test</scope>
+                </dependency>
+                <dependency>
+                    <groupId>org.jboss.spec.javax.servlet</groupId>
+                    <artifactId>jboss-servlet-api_3.0_spec</artifactId>
+                    <version>1.0.0.Beta2</version>
+                    <scope>test</scope>
+                </dependency>
+                <dependency>
+                    <groupId>javax.validation</groupId>
+                    <artifactId>validation-api</artifactId>
+                    <version>1.0.0.GA</version>
+                    <scope>test</scope>
+                </dependency>
+                <dependency>
+                    <groupId>javax.transaction</groupId>
+                    <artifactId>jta</artifactId>
+                    <version>1.1</version>
+                    <scope>test</scope>
+                </dependency>
+                <dependency>
+                    <groupId>javax.persistence</groupId>
+                    <artifactId>persistence-api</artifactId>
+                    <version>1.0</version>
+                    <scope>test</scope>
+                </dependency>
 
-			</dependencies>
-			<dependencyManagement>
-				<dependencies>
-					<dependency>
-						<groupId>org.jboss.weld</groupId>
-						<artifactId>weld-core-bom</artifactId>
-						<version>2.3.2.Final</version>
-						<type>pom</type>
-						<scope>import</scope>
-					</dependency>
-				</dependencies>
-			</dependencyManagement>
-		</profile>
+            </dependencies>
+            <dependencyManagement>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.jboss.weld</groupId>
+                        <artifactId>weld-core-bom</artifactId>
+                        <version>2.3.2.Final</version>
+                        <type>pom</type>
+                        <scope>import</scope>
+                    </dependency>
+                </dependencies>
+            </dependencyManagement>
+        </profile>
 
         <profile>
             <id>openwebbeans-embedded-1</id>
-            <activation><activeByDefault>true</activeByDefault></activation>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
             <dependencies>
 
             </dependencies>
@@ -400,5 +404,5 @@
                 </dependencies>
             </dependencyManagement>
         </profile>
-	</profiles>
+    </profiles>
 </project>
