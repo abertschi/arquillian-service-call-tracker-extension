@@ -15,7 +15,7 @@ import java.nio.file.StandardOpenOption;
  */
 public class ResourceCommandReceiver
 {
-    public void receiveRessource(@Observes ResourceCommand command) throws IOException
+    void receiveRessource(@Observes ResourceCommand command) throws IOException
     {
         command.setResult(Boolean.TRUE);
         File f = new File(command.getPath());

@@ -1,5 +1,6 @@
 package org.sct.arquillian;
 
+import java.io.File;
 import java.io.IOException;
 
 import org.jboss.arquillian.container.test.api.Deployment;
@@ -7,23 +8,18 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
-import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import org.sct.SctInterceptor;
 import org.sct.api.SctConfiguration;
 import org.sct.api.SctConfigurator;
 import org.sct.arquillian.api.SctInterceptTo;
+import org.sct.arquillian.api.SctInterceptBy;
 
-/**
- * Tests for basic features using annotation {@link SctInterceptTo}.
- *
- *
- */
 @RunWith(Arquillian.class)
-public class SctInterceptToTest {
+public class IntegrationTest
+{
 
     @Deployment
     public static Archive<?> createArchive() {
@@ -31,14 +27,17 @@ public class SctInterceptToTest {
                 .addPackages(true, SctInterceptToTest.class.getPackage());
     }
 
-    // ---------------------------------------------------------------------------
-    // tests
-    // ---------------------------------------------------------------------------
-
     @Test
-    @SctInterceptTo("test.xml")
-    public void test_recording() throws IOException {
-        System.out.println("fine");
+    @SctInterceptTo("arquillian-rocks-new.xml")
+    @SctInterceptBy("src/test/resources/files/arquillian-rocks.xml")
+    public void test_recording_and_response_loading() throws IOException {
+        String stubContent = "arquillian-rocks";
+        SctConfiguration c = SctConfigurator.getInstance().getConfiguration();
 
+        Assert.assertTrue(c.isCallRecording());
+        Assert.assertEquals("", TestUtils.convertStreamToString(c.getCallRecordingUrl().openStream()));
+
+        Assert.assertTrue(c.isResponseLoading());
+        Assert.assertEquals(stubContent, TestUtils.convertStreamToString(c.getResponseLoadingUrl().openStream()));
     }
 }

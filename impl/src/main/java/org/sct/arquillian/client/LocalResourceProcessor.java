@@ -27,7 +27,6 @@ import org.sct.arquillian.resource.ResourcePackager;
 import org.sct.arquillian.resource.extraction.AnnotationExtractors;
 import org.sct.arquillian.resource.index.ResourceIndexBuilderImpl;
 import org.sct.arquillian.resource.model.Resource;
-import org.sct.arquillian.util.NotManagedByContainer;
 
 /**
  * Processor which extracts and packages all resources to the archive.

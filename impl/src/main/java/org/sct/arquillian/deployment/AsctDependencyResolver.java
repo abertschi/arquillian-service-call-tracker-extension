@@ -2,12 +2,16 @@ package org.sct.arquillian.deployment;
 
 import java.io.File;
 
+import org.jboss.arquillian.container.test.spi.TestDeployment;
 import org.jboss.arquillian.container.test.spi.client.deployment.ApplicationArchiveProcessor;
+import org.jboss.arquillian.container.test.spi.client.deployment.AuxiliaryArchiveProcessor;
+import org.jboss.arquillian.container.test.spi.client.deployment.ProtocolArchiveProcessor;
 import org.jboss.arquillian.core.api.Instance;
 import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.test.spi.TestClass;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.container.LibraryContainer;
+import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.resolver.api.ResolutionException;
 import org.jboss.shrinkwrap.resolver.api.maven.Maven;
 
@@ -20,10 +24,11 @@ import org.sct.arquillian.util.exception.AsctException;
  *
  * @author Andrin Bertschi
  */
-public class AsctDependencyResolver implements ApplicationArchiveProcessor
+public class AsctDependencyResolver implements ProtocolArchiveProcessor
 {
+
     @Override
-    public void process(Archive<?> archive, TestClass testClass)
+    public void process(TestDeployment testDeployment, Archive<?> archive)
     {
         if (archive instanceof LibraryContainer)
         {
@@ -36,5 +41,6 @@ public class AsctDependencyResolver implements ApplicationArchiveProcessor
                     .loadPomFromFile("pom.xml").resolve("commons-io:commons-io")
                     .withClassPathResolution(true).withTransitivity().as(File.class));
         }
+
     }
 }

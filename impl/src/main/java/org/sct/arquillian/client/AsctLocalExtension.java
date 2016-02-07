@@ -7,6 +7,8 @@ import org.jboss.arquillian.config.descriptor.api.ArquillianDescriptor;
 import org.jboss.arquillian.config.descriptor.api.ExtensionDef;
 import org.jboss.arquillian.container.test.spi.client.deployment.ApplicationArchiveProcessor;
 import org.jboss.arquillian.container.test.spi.client.deployment.AuxiliaryArchiveAppender;
+import org.jboss.arquillian.container.test.spi.client.deployment.AuxiliaryArchiveProcessor;
+import org.jboss.arquillian.container.test.spi.client.deployment.ProtocolArchiveProcessor;
 import org.jboss.arquillian.core.api.Instance;
 import org.jboss.arquillian.core.api.InstanceProducer;
 import org.jboss.arquillian.core.api.annotation.ApplicationScoped;
@@ -32,7 +34,7 @@ public class AsctLocalExtension implements LoadableExtension
     @Override
     public void register(ExtensionBuilder builder)
     {
-        builder.service(ApplicationArchiveProcessor.class, AsctDependencyResolver.class)
+        builder.service(ProtocolArchiveProcessor.class, AsctDependencyResolver.class)
                 .service(AuxiliaryArchiveAppender.class, AsctArchiveAppender.class)
                 .service(ApplicationArchiveProcessor.class, LocalResourceProcessor.class)
                 .observer(ResourceCommandReceiver.class)
