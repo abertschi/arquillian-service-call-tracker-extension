@@ -19,7 +19,8 @@ public class CommandServiceProducer
     @Inject
     private Instance<ServiceLoader> serviceLoaderInstance;
 
-    @Inject @ApplicationScoped
+    @Inject
+    @ApplicationScoped
     InstanceProducer<CommandService> commandServiceProducer;
 
     public void createCommandService(@Observes(precedence = 100) BeforeSuite beforeSuite)

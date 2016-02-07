@@ -7,7 +7,7 @@ import java.lang.reflect.Method;
 import org.jboss.arquillian.test.spi.TestClass;
 import org.jboss.shrinkwrap.api.asset.FileAsset;
 
-import org.sct.arquillian.resource.naming.ResourceBusinessNaming;
+import org.sct.arquillian.resource.naming.ResourceNaming;
 import org.sct.arquillian.AsctConstants;
 import org.sct.arquillian.api.SctInterceptBy;
 import org.sct.arquillian.client.AsctLocalExtension.AsctDescriptor;
@@ -16,46 +16,50 @@ import org.sct.arquillian.util.exception.AsctException;
 
 /**
  * Extractor capable extracting information specified by {@link SctInterceptBy}.
- * 
+ *
  * @author Andrin Bertschi
- * 
  */
 public class SctInterceptByExtractor extends
-        AbstractAnnotationExtractor<SctInterceptBy, ResourceImpl> {
+        AbstractAnnotationExtractor<SctInterceptBy, ResourceImpl>
+{
 
     private File mockingDirectoryRoot;
 
-    public SctInterceptByExtractor(AsctDescriptor descriptor) {
+    public SctInterceptByExtractor(AsctDescriptor descriptor)
+    {
         super(SctInterceptBy.class, ResourceImpl.class);
-        
-        this.mockingDirectoryRoot = new File(".", 
-        		descriptor.getProperties().get(AsctConstants.EXT_PROPERTY_MOCKING_ROOT));
+
+        this.mockingDirectoryRoot = new File(".",
+                descriptor.getProperties().get(AsctConstants.EXT_PROPERTY_MOCKING_ROOT));
     }
 
     @Override
-    public ResourceImpl extractAsResource(TestClass testClass, Method testMethod,
-            Annotation annotation) {
+    public ResourceImpl extractAsResource(TestClass testClass, Method testMethod, Annotation annotation)
+    {
         File file = null;
         ResourceImpl resource = null;
-
-        try {
+        try
+        {
             SctInterceptBy annot = (SctInterceptBy) annotation;
             resource = new ResourceImpl();
             file = extractLocation(annot);
             ensureIfFileExist(file, testClass, testMethod);
             resource.setPath(file.getPath());
             resource.setAsset(new FileAsset(file));
-            ResourceBusinessNaming naming = new ResourceBusinessNaming(testClass, testMethod);
+            ResourceNaming naming = new ResourceNaming(testClass, testMethod);
             resource.setName(naming.create());
 
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             handleException(testClass, testMethod, file, e);
         }
 
         return resource;
     }
 
-    private void handleException(TestClass testClass, Method testMethod, File file, Exception e) {
+    private void handleException(TestClass testClass, Method testMethod, File file, Exception e)
+    {
         AsctException asctE = new AsctException(e);
         asctE.add("test-class", testClass.getJavaClass().getCanonicalName());
         asctE.add("test-method", testMethod.getName());
@@ -64,8 +68,10 @@ public class SctInterceptByExtractor extends
         throw asctE;
     }
 
-    private void ensureIfFileExist(File file, TestClass testClass, Method testMethod) {
-        if (!file.exists()) {
+    private void ensureIfFileExist(File file, TestClass testClass, Method testMethod)
+    {
+        if (!file.exists())
+        {
             String m = String.format("Resource %s specified in %s was not found on client machine.",
                     file.getAbsolutePath(), SctInterceptBy.class.getName());
 
@@ -73,10 +79,14 @@ public class SctInterceptByExtractor extends
         }
     }
 
-    private File extractLocation(SctInterceptBy mockedData) {
-        try {
+    private File extractLocation(SctInterceptBy mockedData)
+    {
+        try
+        {
             return new File(this.mockingDirectoryRoot, mockedData.value());
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             throw new RuntimeException(String.format("Not able to create file using %s and %s",
                     this.mockingDirectoryRoot.getAbsoluteFile(), mockedData.value()));
         }

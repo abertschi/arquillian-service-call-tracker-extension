@@ -14,29 +14,32 @@ import org.sct.arquillian.util.StringUtils;
 /**
  * @author Andrin Bertschi
  */
-public class ResourcePackager {
-
-    public ResourcePackager() {
-    }
-
-    public void addResourcesToArchive(Archive<?> archive, List<Resource> resources) {
-        for (Resource res : resources) {
+public class ResourcePackager
+{
+    public void addResourcesToArchive(Archive<?> archive, List<Resource> resources)
+    {
+        for (Resource res : resources)
+        {
             addResourceToArchive(archive, res);
         }
     }
 
-    public void addResourceToArchive(Archive<?> archive, Resource resources) {
+    public void addResourceToArchive(Archive<?> archive, Resource resources)
+    {
         archive.add(resources.getAsset(), resources.getPath());
     }
 
-    public List<Resource> moveResources(String targetBaseDir, List<Resource> sourceResources) {
+    public List<Resource> moveResources(String targetBaseDir, List<Resource> sourceResources)
+    {
         List<Resource> targetResources = new ArrayList<>();
-        for (Resource r : sourceResources) {
+        for (Resource r : sourceResources)
+        {
             ResourceImpl newR = new ResourceImpl();
             newR.setAsset(r.getAsset());
             newR.setName(r.getName());
             String fileName = StringUtils.extractFileName(r.getPath());
-            if (!targetBaseDir.endsWith("/")) {
+            if (!targetBaseDir.endsWith("/"))
+            {
                 fileName = "/" + fileName;
             }
             newR.setPath(targetBaseDir + fileName);
@@ -45,10 +48,14 @@ public class ResourcePackager {
         return targetResources;
     }
 
-    public void mergeArchives(final Archive<?> applicationArchive, final JavaArchive dataArchive) {
-        if (JavaArchive.class.isInstance(applicationArchive)) {
+    public void mergeArchives(final Archive<?> applicationArchive, final JavaArchive dataArchive)
+    {
+        if (JavaArchive.class.isInstance(applicationArchive))
+        {
             applicationArchive.merge(dataArchive);
-        } else {
+        }
+        else
+        {
             final LibraryContainer<?> libraryContainer = (LibraryContainer<?>) applicationArchive;
             libraryContainer.addAsLibrary(dataArchive);
         }

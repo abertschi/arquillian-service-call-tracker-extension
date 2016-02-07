@@ -10,11 +10,19 @@ import org.sct.arquillian.resource.model.Resource;
 public class ResourceCommand extends AbstractCommand<Boolean>
 {
 
-    public ResourceCommand(String name, String path, String content) {
+    private String content;
+
+    private String path;
+
+    private String name;
+
+    public ResourceCommand(String name, String path, String content)
+    {
         this.name = name;
         this.content = content;
         this.path = path;
     }
+
     public String getName()
     {
         return name;
@@ -24,8 +32,6 @@ public class ResourceCommand extends AbstractCommand<Boolean>
     {
         this.name = name;
     }
-
-    private String name;
 
     public String getPath()
     {
@@ -46,8 +52,4 @@ public class ResourceCommand extends AbstractCommand<Boolean>
     {
         this.content = content;
     }
-
-    private String content;
-
-    private String path;
 }

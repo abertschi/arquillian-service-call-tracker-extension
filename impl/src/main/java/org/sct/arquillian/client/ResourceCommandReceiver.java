@@ -20,7 +20,8 @@ public class ResourceCommandReceiver
         command.setResult(Boolean.TRUE);
         File f = new File(command.getPath());
         f.getParentFile().mkdirs();
-        if (f.exists()) {
+        if (f.exists())
+        {
             f.delete();
         }
         Files.write(Paths.get(f.toURI()), command.getContent().getBytes(), StandardOpenOption.CREATE_NEW);

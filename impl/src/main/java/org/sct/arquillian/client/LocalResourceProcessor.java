@@ -30,61 +30,52 @@ import org.sct.arquillian.resource.model.Resource;
 import org.sct.arquillian.util.NotManagedByContainer;
 
 /**
- * 
  * Processor which extracts and packages all resources to the archive.
- * 
+ *
  * @author Andrin Bertschi
- * 
  */
-public class LocalResourceProcessor implements ApplicationArchiveProcessor {
+public class LocalResourceProcessor implements ApplicationArchiveProcessor
+{
 
     private static final String EXTENSION_JAR_NAME = "service-call-tracker-extension-resources.jar";
-    
+
     private static final Logger LOG = LoggerFactory.getLogger(LocalResourceProcessor.class);
 
     @Inject
     @SuiteScoped
-    private InstanceProducer<LocalResourceProcessor> instanceProducer;
+    InstanceProducer<LocalResourceProcessor> instanceProducer;
 
     @Inject
-    private Instance<AsctDescriptor> descriptor;
+    Instance<AsctDescriptor> descriptor;
 
-    LocalResourceProcessor() {
-    }
-
-    public LocalResourceProcessor(InstanceProducer<LocalResourceProcessor> instanceProducer,  Instance<AsctDescriptor> descriptor) {
-        this.instanceProducer = instanceProducer;
-        this.descriptor = descriptor;
-    }
-
-    public void init(@Observes(precedence = 50) BeforeClass before) {
-        // TODO: Try to automate this boiler code by using Arquillian Injector
+    public void init(@Observes(precedence = 50) BeforeClass before)
+    {
         this.instanceProducer.set(this);
     }
 
     @Override
-    public void process(Archive<?> applicationArchive, TestClass testClass) {
+    public void process(Archive<?> applicationArchive, TestClass testClass)
+    {
         // TODO: scan for annotations if run with suitextension
-        System.out.println(testClass);
-
         List<Resource> recordingResources = new ArrayList<>();
         final AnnotationExtractors extraction = new AnnotationExtractors(this.descriptor.get());
-        for (TestClass clazz : TestClassScanner.GET.findTestClassAnnotatedBy(SctInterceptTo.class)) {
+        for (TestClass clazz : TestClassScanner.GET.findTestClassAnnotatedBy(SctInterceptTo.class))
+        {
             List<Resource> r = extraction.extractRecordingResources(clazz);
-            if (r != null) {
+            if (r != null)
+            {
                 recordingResources.addAll(r);
             }
         }
         List<Resource> mockResources = new ArrayList<>();
-        for (TestClass clazz : TestClassScanner.GET.findTestClassAnnotatedBy(SctInterceptBy.class)) {
+        for (TestClass clazz : TestClassScanner.GET.findTestClassAnnotatedBy(SctInterceptBy.class))
+        {
             List<Resource> r = extraction.extractMockingResources(clazz);
-            if (r != null) {
+            if (r != null)
+            {
                 mockResources.addAll(r);
             }
         }
-
-        System.out.println( mockResources);
-        System.out.println(recordingResources);
 
         final ResourcePackager packager = new ResourcePackager();
         mockResources = packager.moveResources(AsctConstants.RESOURCE_ROOT, mockResources);

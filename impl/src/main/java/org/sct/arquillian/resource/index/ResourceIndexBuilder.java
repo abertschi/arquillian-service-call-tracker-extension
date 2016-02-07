@@ -7,7 +7,8 @@ import org.sct.arquillian.resource.model.Resource;
 /**
  * @author Andrin Bertschi
  */
-interface ResourceIndexBuilder {
+interface ResourceIndexBuilder
+{
 
     Resource createIndex(String location, List<Resource> resources);
 

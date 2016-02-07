@@ -41,9 +41,8 @@ public class SctInterceptToTest {
     // ---------------------------------------------------------------------------
 
     @Test
-    @SctInterceptTo("bean.xml")
+    @SctInterceptTo("test.xml")
     public void test_recording() throws IOException {
-
         System.out.println("fine");
 
     }

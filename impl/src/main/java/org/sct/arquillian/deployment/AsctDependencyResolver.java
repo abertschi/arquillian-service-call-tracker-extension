@@ -16,16 +16,12 @@ import org.sct.arquillian.client.AsctLocalExtension.AsctDescriptor;
 import org.sct.arquillian.util.exception.AsctException;
 
 /**
- * 
  * Appender to include necessary libraries used by extension.
- * 
+ *
  * @author Andrin Bertschi
- * 
  */
-public class AsctDependencyResolver implements ApplicationArchiveProcessor {
-
-    private static final String SERVICVE_MOCK = "org.sct:service-call-tracker-impl";
-
+public class AsctDependencyResolver implements ApplicationArchiveProcessor
+{
     @Override
     public void process(Archive<?> archive, TestClass testClass)
     {
@@ -33,15 +29,11 @@ public class AsctDependencyResolver implements ApplicationArchiveProcessor {
         {
             LibraryContainer<?> container = (LibraryContainer<?>) archive;
             container.addAsLibraries(Maven.resolver().offline()
-                    .loadPomFromFile("pom.xml").resolve(SERVICVE_MOCK)
+                    .loadPomFromFile("pom.xml").resolve("org.sct:service-call-tracker-impl")
                     .withClassPathResolution(true).withTransitivity().as(File.class));
 
             container.addAsLibraries(Maven.resolver().offline()
                     .loadPomFromFile("pom.xml").resolve("commons-io:commons-io")
-                    .withClassPathResolution(true).withTransitivity().as(File.class));
-
-            container.addAsLibraries(Maven.resolver().offline()
-                    .loadPomFromFile("pom.xml").resolve("com.google.jimfs:jimfs")
                     .withClassPathResolution(true).withTransitivity().as(File.class));
         }
     }

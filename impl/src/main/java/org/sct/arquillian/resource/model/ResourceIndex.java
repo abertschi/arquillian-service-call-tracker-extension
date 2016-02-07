@@ -14,44 +14,53 @@ import org.sct.arquillian.util.exception.AsctException;
 /**
  * @author Andrin Bertschi
  */
-public class ResourceIndex implements Resource {
-
+public class ResourceIndex implements Resource
+{
     private Map<String, String> index = new HashMap<>();
 
     private String location;
 
     @Override
-    public Asset getAsset() {
+    public Asset getAsset()
+    {
         return new StringAsset(readContent());
     }
 
-    public String readContent() {
+    public String readContent()
+    {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
-        try {
+        try
+        {
             Properties props = new Properties();
             props.putAll(this.index);
             props.store(out, getPath());
             return out.toString();
-        } catch (IOException e) {
+        }
+        catch (IOException e)
+        {
             throw new AsctException("Not able to write Resource index to " + getPath(), e);
         }
     }
 
-    public void putIndex(String key, String value) {
+    public void putIndex(String key, String value)
+    {
         this.index.put(key, value);
     }
 
     @Override
-    public String getPath() {
+    public String getPath()
+    {
         return location;
     }
 
-    public void setLocation(String location) {
+    public void setLocation(String location)
+    {
         this.location = location;
     }
 
     @Override
-    public String getName() {
+    public String getName()
+    {
         return null;
     }
 }

@@ -10,7 +10,8 @@ import org.slf4j.LoggerFactory;
  *
  * @author Andrin Bertschi
  */
-public class AsctRemoteExtension implements RemoteLoadableExtension {
+public class AsctRemoteExtension implements RemoteLoadableExtension
+{
 
     @Override
     public void register(ExtensionBuilder builder)

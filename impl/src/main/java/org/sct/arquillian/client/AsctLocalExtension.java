@@ -35,6 +35,7 @@ public class AsctLocalExtension implements LoadableExtension
         builder.service(ApplicationArchiveProcessor.class, AsctDependencyResolver.class)
                 .service(AuxiliaryArchiveAppender.class, AsctArchiveAppender.class)
                 .service(ApplicationArchiveProcessor.class, LocalResourceProcessor.class)
+                .observer(ResourceCommandReceiver.class)
                 .observer(AsctDescriptor.class);
     }
 
@@ -69,6 +70,9 @@ public class AsctLocalExtension implements LoadableExtension
         public Map<String, String> getProperties()
         {
             Map<String, String> props = new HashMap<>();
+            /*
+             * Defaults:
+             */
             props.put(AsctConstants.EXT_PROPERTY_RECORDING_ROOT, "./target/");
             props.put(AsctConstants.EXT_PROPERTY_MOCKING_ROOT, "./");
 

@@ -5,11 +5,10 @@ import java.net.URL;
 import org.sct.api.SctConfiguration;
 
 /**
- * 
  * @author Andrin Bertschi
- *
  */
-public class SctConfigurationImpl implements SctConfiguration {
+public class SctConfigurationImpl implements SctConfiguration
+{
 
     private boolean isCallRecording;
 
@@ -19,49 +18,59 @@ public class SctConfigurationImpl implements SctConfiguration {
 
     private URL responseLoadingUrl;
 
-    public SctConfigurationImpl() {
+    public SctConfigurationImpl()
+    {
         this.isCallRecording = false;
         this.isResponseLoading = false;
     }
 
     @Override
-    public boolean isCallRecording() {
+    public boolean isCallRecording()
+    {
         return isCallRecording;
     }
 
     @Override
-    public boolean isResponseLoading() {
+    public boolean isResponseLoading()
+    {
         return isResponseLoading;
     }
 
     @Override
-    public URL getCallRecordingUrl() {
+    public URL getCallRecordingUrl()
+    {
         return callRecordingUrl;
     }
 
     @Override
-    public URL getResponseLoadingUrl() {
+    public URL getResponseLoadingUrl()
+    {
         return responseLoadingUrl;
     }
 
-    public void setCallRecording(boolean isCallRecording) {
+    public void setCallRecording(boolean isCallRecording)
+    {
         this.isCallRecording = isCallRecording;
     }
 
-    public void setResponseLoading(boolean isResponseLoading) {
+    public void setResponseLoading(boolean isResponseLoading)
+    {
         this.isResponseLoading = isResponseLoading;
     }
 
-    public void setCallRecordingUrl(URL callRecordingUrl) {
+    public void setCallRecordingUrl(URL callRecordingUrl)
+    {
         this.callRecordingUrl = callRecordingUrl;
     }
 
-    public void setResponseLoadingUrl(URL responseLoadingUrl) {
+    public void setResponseLoadingUrl(URL responseLoadingUrl)
+    {
         this.responseLoadingUrl = responseLoadingUrl;
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         return "SctConfigurationImpl [isCallRecording=" + isCallRecording + ", isResponseLoading="
                 + isResponseLoading + ", callRecordingUrl=" + callRecordingUrl
                 + ", responseLoadingUrl=" + responseLoadingUrl + "]";

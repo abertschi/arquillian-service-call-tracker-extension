@@ -1,10 +1,9 @@
 package org.sct.arquillian.container;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 
 import org.jboss.arquillian.container.test.spi.command.CommandService;
 import org.jboss.arquillian.core.api.Instance;
@@ -16,21 +15,19 @@ import org.jboss.arquillian.test.spi.event.suite.BeforeSuite;
 
 import org.sct.api.SctConfigurator;
 import org.sct.arquillian.ResourceCommand;
-import org.sct.arquillian.resource.naming.ResourceBusinessNaming;
-import org.sct.arquillian.resource.LocationResolver.ClientLocationResolver;
-import org.sct.arquillian.resource.LocationResolver.RemoteLocationResolver;
+import org.sct.arquillian.resource.naming.ResourceNaming;
 import org.sct.arquillian.resource.model.Resource;
+import org.sct.arquillian.util.exception.AsctException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Sets configuration required by {@code sct} for current test execution. See
- * {@link SctConfiguration}.
- * 
+ * Sets configuration required by {@code ServiceCallTracker} for current test execution.
+ *
  * @author Andrin Bertschi
- * 
  */
-public class SctConfigurationEnricher {
+public class SctConfigurationEnricher
+{
 
     @Inject
     Instance<ResourceData> configurations;
@@ -42,63 +39,76 @@ public class SctConfigurationEnricher {
 
     private SctConfigurationImpl sctConfig;
 
-    public void init(@Observes BeforeSuite before) {
+    void init(@Observes BeforeSuite before)
+    {
         this.sctConfig = new SctConfigurationImpl();
         SctConfigurator.getInstance().setConfiguration(sctConfig);
     }
 
-    public void beforeTest(@Observes Before before) throws MalformedURLException {
-        ResourceBusinessNaming naming =
-                new ResourceBusinessNaming(before.getTestClass(), before.getTestMethod());
-
-        System.out.println("hi");
-        String businessKey = naming.create();
-        initBoundary(this.sctConfig);
-
-        setMockingBoundary(businessKey, this.sctConfig);
-        setRecordingBoundary(businessKey, this.sctConfig);
-    }
-
-    public void afterTest(@Observes AfterSuite after) throws URISyntaxException, IOException
+    void beforeTest(@Observes Before before) throws MalformedURLException
     {
-        for (Resource r : configurations.get().getRecordingResources()) {
+        ResourceNaming naming =
+                new ResourceNaming(before.getTestClass(), before.getTestMethod());
+
+        String businessKey = naming.create();
+        initServiceCallTracker(this.sctConfig);
+
+        setupReplaying(businessKey, this.sctConfig);
+        setupRecording(businessKey, this.sctConfig);
+    }
+
+    void afterTest(@Observes AfterSuite after) throws URISyntaxException, IOException
+    {
+        for (Resource r : configurations.get().getRecordingResources())
+        {
+            Resource rOnClient = configurations.get().getRecordingResoucesOnClientAsMap().get(r.getName());
             String content = convertStreamToString(r.getAsset().openStream());
-            commandService.get().execute(new ResourceCommand(r.getName(), r.getPath(), content));
+            commandService.get().execute(new ResourceCommand(r.getName(), rOnClient.getPath(), content));
         }
-        initBoundary(this.sctConfig);
+        initServiceCallTracker(this.sctConfig);
     }
 
-    static String convertStreamToString(java.io.InputStream is) {
-        java.util.Scanner s = new java.util.Scanner(is).useDelimiter("\\A");
-        return s.hasNext() ? s.next() : "";
-    }
-
-
-    private void setMockingBoundary(String id, SctConfigurationImpl exec)
-            throws MalformedURLException {
-        if (this.configurations.get().getMockingResourcesAsMap().containsKey(id)) {
-            Resource res = this.configurations.get().getMockingResourcesAsMap().get(id);
+    private void setupReplaying(String id, SctConfigurationImpl exec)
+            throws MalformedURLException
+    {
+        if (this.configurations.get().getReplayingResourcesAsMap().containsKey(id))
+        {
+            Resource res = this.configurations.get().getReplayingResourcesAsMap().get(id);
             exec.setResponseLoading(true);
-
-            // TODO: Not responsibility of this class -> move to resource!
-            exec.setResponseLoadingUrl(new RemoteLocationResolver().resolve(res.getPath()));
+            exec.setResponseLoadingUrl(Thread.currentThread().getContextClassLoader().getResource(res.getPath()));
         }
     }
 
-    private void setRecordingBoundary(String id, SctConfigurationImpl exec)
-            throws MalformedURLException {
-        if (this.configurations.get().getRecordingResourcesAsMap().containsKey(id)) {
+    private void setupRecording(String id, SctConfigurationImpl exec)
+            throws MalformedURLException
+    {
+        if (this.configurations.get().getRecordingResourcesAsMap().containsKey(id))
+        {
             Resource res = this.configurations.get().getRecordingResourcesAsMap().get(id);
             exec.setCallRecording(true);
-            exec.setCallRecordingUrl(new ClientLocationResolver().resolve(res.getPath()));
+            try
+            {
+                exec.setCallRecordingUrl(new File(res.getPath()).toURI().toURL());
+            }
+            catch (MalformedURLException e)
+            {
+                throw new AsctException(e);
+            }
         }
     }
 
-    private void initBoundary(SctConfigurationImpl exec) {
+    private void initServiceCallTracker(SctConfigurationImpl exec)
+    {
         exec.setResponseLoadingUrl(null);
         exec.setCallRecordingUrl(null);
         exec.setResponseLoading(false);
         exec.setCallRecording(false);
+    }
+
+    static String convertStreamToString(java.io.InputStream is)
+    {
+        java.util.Scanner s = new java.util.Scanner(is).useDelimiter("\\A");
+        return s.hasNext() ? s.next() : "";
     }
 
 }

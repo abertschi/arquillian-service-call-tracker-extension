@@ -20,47 +20,38 @@ import org.sct.arquillian.container.AsctRemoteExtension;
 
 /**
  * Append extension to deployable archive.
- * 
+ *
  * @author Andrin Bertschi
  */
-public class AsctArchiveAppender implements AuxiliaryArchiveAppender {
+public class AsctArchiveAppender implements AuxiliaryArchiveAppender
+{
 
     @Override
-    public Archive<?> createAuxiliaryArchive() {
-    	bootLocalObservers();
+    public Archive<?> createAuxiliaryArchive()
+    {
+        bootLocalObservers();
         return createArchive();
     }
 
-    private Archive<?> createArchive() {
-        JavaArchive jar = ShrinkWrap
+    private Archive<?> createArchive()
+    {
+        return ShrinkWrap
                 .create(JavaArchive.class, "service-call-tracker-extension.jar")
-
-                // Add all required Asct code
-                .addPackages(true,
-                		// Filters.exclude(AsctArchiveAppender.class.getPackage()),        // exclude deployment package
-                        "org.sct.arquillian")
-
+                .addPackages(true, "org.sct.arquillian")
                 .addAsServiceProvider(RemoteLoadableExtension.class, AsctRemoteExtension.class)
                 .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
-        return jar;
     }
-    
-    // ----------------------------------------------------------------------------------------
-    // FIXME: asct-suite-extension-capable
-    // ----------------------------------------------------------------------------------------
 
+    // fix problems occurring with arquillian suite extension
     @Inject
-    private Instance<Injector> injector;
+    Instance<Injector> injector;
 
     @Inject
     @ApplicationScoped
-    private InstanceProducer<AsctLocalExtension.AsctDescriptor> instanceProducer;
+    InstanceProducer<AsctLocalExtension.AsctDescriptor> instanceProducer;
 
-    /**
-     * Due to conflict described in {@code asct-suite-extension-capable}, all client side observers
-     * must be started manually.
-     */
-    public void bootLocalObservers() {
+    public void bootLocalObservers()
+    {
         Manager manager = getManager(injector.get());
 
         AsctLocalExtension.AsctDescriptor asctDescriptor = injector.get().inject(new AsctLocalExtension.AsctDescriptor());
@@ -69,18 +60,28 @@ public class AsctArchiveAppender implements AuxiliaryArchiveAppender {
         manager.bind(ApplicationScoped.class, AsctLocalExtension.AsctDescriptor.class, asctDescriptor);
     }
 
-    private Manager getManager(Injector inj) {
-        try {
+    private Manager getManager(Injector inj)
+    {
+        try
+        {
             Field f = inj.getClass().getDeclaredField("manager");
             f.setAccessible(true);
             return (Manager) f.get(inj);
-        } catch (NoSuchFieldException e) {
+        }
+        catch (NoSuchFieldException e)
+        {
             throw new RuntimeException("Something went wrong. No manager was found in context", e);
-        } catch (SecurityException e) {
+        }
+        catch (SecurityException e)
+        {
             throw new RuntimeException(e);
-        } catch (IllegalArgumentException e) {
+        }
+        catch (IllegalArgumentException e)
+        {
             throw new RuntimeException(e);
-        } catch (IllegalAccessException e) {
+        }
+        catch (IllegalAccessException e)
+        {
             throw new RuntimeException(e);
         }
     }
