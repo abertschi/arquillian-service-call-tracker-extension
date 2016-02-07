@@ -13,9 +13,7 @@ public class AsctConstants {
     public static final String EXT_PROPERTY_RECORDING_ROOT = "asctRecordingHome";
     
     public static final String EXT_PROPERTY_MOCKING_ROOT = "asctLoadingHome";
-    
-    public static final String EXT_PROPERTY_MAVEN_SETTINGS_XML = "mavenSettingsXml";
-    
+
     public static final String RESOURCE_ROOT = "/META-INF/asct/";
     
     public static final String RESOURCE_MOCKING_INDEX = RESOURCE_ROOT + "asct-loading-index.properties";

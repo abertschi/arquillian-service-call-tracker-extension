@@ -30,10 +30,10 @@ public class ResourceIndex implements Resource {
         try {
             Properties props = new Properties();
             props.putAll(this.index);
-            props.store(out, getLocation());
+            props.store(out, getPath());
             return out.toString();
         } catch (IOException e) {
-            throw new AsctException("Not able to write Resource index to " + getLocation(), e);
+            throw new AsctException("Not able to write Resource index to " + getPath(), e);
         }
     }
 
@@ -42,7 +42,7 @@ public class ResourceIndex implements Resource {
     }
 
     @Override
-    public String getLocation() {
+    public String getPath() {
         return location;
     }
 
@@ -51,7 +51,7 @@ public class ResourceIndex implements Resource {
     }
 
     @Override
-    public String getBusinessKey() {
+    public String getName() {
         return null;
     }
 }

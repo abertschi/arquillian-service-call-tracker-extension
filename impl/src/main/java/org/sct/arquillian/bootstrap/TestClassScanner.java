@@ -14,35 +14,42 @@ import org.reflections.Reflections;
 /**
  * @author Andrin Bertschi
  */
-public enum TestClassScanner {
+public enum TestClassScanner
+{
 
     GET;
 
     private Reflections reflections;
 
-    TestClassScanner() {
+    TestClassScanner()
+    {
         reflections = new Reflections("");
     }
 
-    public <T extends Annotation> List<TestClass> findTestClassAnnotatedBy(Class<T> annotation) {
-        Set<TestClass> testClasses = new HashSet<TestClass>();
+    public <T extends Annotation> List<TestClass> findTestClassAnnotatedBy(Class<T> annotation)
+    {
+        Set<TestClass> testClasses = new HashSet<>();
         Set<Class<?>> classes = reflections.getTypesAnnotatedWith(RunWith.class);
-        for (Class<?> type : classes) {
-            try {
-                if (type.isInterface()) {
+        for (Class<?> type : classes)
+        {
+            try
+            {
+                if (type.isInterface())
+                {
                     continue;
                 }
                 TestClass testClass = new TestClass(type);
 
                 Method[] methods = testClass.getMethods(annotation);
-                if (methods != null && methods.length > 0) {
+                if (methods != null && methods.length > 0)
+                {
                     testClasses.add(testClass);
                 }
-            } catch (SecurityException e) {
+            }
+            catch (SecurityException e)
+            { // not relevant, just skip
             }
         }
-        List<TestClass> result = new ArrayList<>();
-        result.addAll(testClasses);
-        return result;
+        return new ArrayList<>(testClasses);
     }
 }

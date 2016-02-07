@@ -24,42 +24,25 @@ import org.sct.arquillian.util.exception.AsctException;
  */
 public class AsctDependencyResolver implements ApplicationArchiveProcessor {
 
-    private static final String SERVICVE_MOCK = "org.sct:service-call-tracker-base-impl";
-
-    @Inject
-    private Instance<AsctDescriptor> descriptor;
-    
-    public AsctDependencyResolver() {
-    }
-    
-    public AsctDependencyResolver(Instance<AsctDescriptor> descriptor) {
-        this.descriptor = descriptor;
-    }
+    private static final String SERVICVE_MOCK = "org.sct:service-call-tracker-impl";
 
     @Override
-    public void process(Archive<?> applicationArchive, TestClass testClass) {
-        appendServiceMock(applicationArchive);
-    }
-
-    private void append(Archive<?> archive, String artifact) {
-        if (archive instanceof LibraryContainer) {
+    public void process(Archive<?> archive, TestClass testClass)
+    {
+        if (archive instanceof LibraryContainer)
+        {
             LibraryContainer<?> container = (LibraryContainer<?>) archive;
-            
-            System.out.println(descriptor.get().getProperties());
-                
-            File[] files = Maven.configureResolver()
-                    .fromFile(descriptor.get().getProperties().get(AsctConstants.EXT_PROPERTY_MAVEN_SETTINGS_XML))
-                    .offline().loadPomFromFile("pom.xml").resolve(artifact).withMavenCentralRepo(false)
-                    .withTransitivity().asFile();
-            container.addAsLibraries(files);
-        }
-    }
+            container.addAsLibraries(Maven.resolver().offline()
+                    .loadPomFromFile("pom.xml").resolve(SERVICVE_MOCK)
+                    .withClassPathResolution(true).withTransitivity().as(File.class));
 
-    private void appendServiceMock(Archive<?> archive) {
-        try {
-            append(archive, SERVICVE_MOCK);
-        } catch (ResolutionException e) {
-            throw new AsctException(String.format("Dependency %s is not definded in pom.xml.", SERVICVE_MOCK));
+            container.addAsLibraries(Maven.resolver().offline()
+                    .loadPomFromFile("pom.xml").resolve("commons-io:commons-io")
+                    .withClassPathResolution(true).withTransitivity().as(File.class));
+
+            container.addAsLibraries(Maven.resolver().offline()
+                    .loadPomFromFile("pom.xml").resolve("com.google.jimfs:jimfs")
+                    .withClassPathResolution(true).withTransitivity().as(File.class));
         }
     }
 }

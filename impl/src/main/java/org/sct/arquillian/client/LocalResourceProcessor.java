@@ -65,8 +65,26 @@ public class LocalResourceProcessor implements ApplicationArchiveProcessor {
     @Override
     public void process(Archive<?> applicationArchive, TestClass testClass) {
         // TODO: scan for annotations if run with suitextension
-        List<Resource> mockResources = scanForAnnotation(SctInterceptBy.class);
-        List<Resource> recordingResources = scanForAnnotation(SctInterceptTo.class);
+        System.out.println(testClass);
+
+        List<Resource> recordingResources = new ArrayList<>();
+        final AnnotationExtractors extraction = new AnnotationExtractors(this.descriptor.get());
+        for (TestClass clazz : TestClassScanner.GET.findTestClassAnnotatedBy(SctInterceptTo.class)) {
+            List<Resource> r = extraction.extractRecordingResources(clazz);
+            if (r != null) {
+                recordingResources.addAll(r);
+            }
+        }
+        List<Resource> mockResources = new ArrayList<>();
+        for (TestClass clazz : TestClassScanner.GET.findTestClassAnnotatedBy(SctInterceptBy.class)) {
+            List<Resource> r = extraction.extractMockingResources(clazz);
+            if (r != null) {
+                mockResources.addAll(r);
+            }
+        }
+
+        System.out.println( mockResources);
+        System.out.println(recordingResources);
 
         final ResourcePackager packager = new ResourcePackager();
         mockResources = packager.moveResources(AsctConstants.RESOURCE_ROOT, mockResources);
@@ -82,20 +100,5 @@ public class LocalResourceProcessor implements ApplicationArchiveProcessor {
         packager.addResourceToArchive(resourcesJar, mockIndex);
 
         packager.mergeArchives(applicationArchive, resourcesJar);
-    }
-
-    List<Resource> scanForAnnotation(Class<? extends Annotation> testAnnotation) {
-        List<TestClass> testClasses = TestClassScanner.GET.findTestClassAnnotatedBy(testAnnotation);
-        List<Resource> resources = new ArrayList<>();
-
-        AnnotationExtractors extraction = new AnnotationExtractors(this.descriptor.get());
-        for (TestClass clazz : testClasses) {
-            List<Resource> res = extraction.extractMockingResources(clazz);
-            if (res != null) {
-                resources.addAll(res);
-            }
-        }
-        LOG.info("{} resources found specified by {}", new Object[]{resources.size(), testAnnotation.getName()});
-        return resources;
     }
 }

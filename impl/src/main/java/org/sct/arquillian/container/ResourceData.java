@@ -22,7 +22,7 @@ public class ResourceData {
     public Map<String, Resource> getMockingResourcesAsMap() {
         Map<String, Resource> map = new HashMap<>();
         for (Resource resource : mockingResources) {
-            map.put(resource.getBusinessKey(), resource);
+            map.put(resource.getName(), resource);
         }
         return map;
     }
@@ -30,7 +30,7 @@ public class ResourceData {
     public Map<String, Resource> getRecordingResourcesAsMap() {
         Map<String, Resource> map = new HashMap<>();
         for (Resource resource : recordingResources) {
-            map.put(resource.getBusinessKey(), resource);
+            map.put(resource.getName(), resource);
         }
         return map;
     }

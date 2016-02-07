@@ -26,7 +26,7 @@ public class ResourcePackager {
     }
 
     public void addResourceToArchive(Archive<?> archive, Resource resources) {
-        archive.add(resources.getAsset(), resources.getLocation());
+        archive.add(resources.getAsset(), resources.getPath());
     }
 
     public List<Resource> moveResources(String targetBaseDir, List<Resource> sourceResources) {
@@ -34,12 +34,12 @@ public class ResourcePackager {
         for (Resource r : sourceResources) {
             ResourceImpl newR = new ResourceImpl();
             newR.setAsset(r.getAsset());
-            newR.setBusinessKey(r.getBusinessKey());
-            String fileName = StringUtils.extractFileName(r.getLocation());
+            newR.setName(r.getName());
+            String fileName = StringUtils.extractFileName(r.getPath());
             if (!targetBaseDir.endsWith("/")) {
                 fileName = "/" + fileName;
             }
-            newR.setLocation(targetBaseDir + fileName);
+            newR.setPath(targetBaseDir + fileName);
             targetResources.add(newR);
         }
         return targetResources;

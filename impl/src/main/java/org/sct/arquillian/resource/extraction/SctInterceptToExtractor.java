@@ -28,8 +28,10 @@ public class SctInterceptToExtractor extends
 
     public SctInterceptToExtractor(AsctLocalExtension.AsctDescriptor descriptor) {
         super(SctInterceptTo.class, ResourceImpl.class);
-        
-        this.directoryRoot = new File(".", descriptor.getProperties().get(
+
+        System.out.println("bean: " + descriptor.getProperties().get(
+                AsctConstants.EXT_PROPERTY_RECORDING_ROOT));
+        this.directoryRoot = new File("./", descriptor.getProperties().get(
                 AsctConstants.EXT_PROPERTY_RECORDING_ROOT));
     }
 
@@ -44,10 +46,10 @@ public class SctInterceptToExtractor extends
             resource = new ResourceImpl();
             file = extractLocation(annot);
             createFile(file, testClass);
-            resource.setLocation(file.getAbsolutePath());
+            resource.setPath(file.getAbsolutePath());
             resource.setAsset(new FileAsset(file));
             ResourceBusinessNaming naming = new ResourceBusinessNaming(testClass, testMethod);
-            resource.setBusinessKey(naming.create());
+            resource.setName(naming.create());
 
         } catch (Exception e) {
             handleException(testClass, testMethod, file, e);

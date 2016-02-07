@@ -20,7 +20,7 @@
 
 
 		<!-- Used in BOM -->
-		<version.shrinkwrap.resolver.bom>2.1.0-alpha-1</version.shrinkwrap.resolver.bom>
+		<version.shrinkwrap.resolver.bom>2.2.1</version.shrinkwrap.resolver.bom>
 		<version.arquillian.bom>1.1.3.Final</version.arquillian.bom>
 		<version.org.slf4j.simple>1.7.7</version.org.slf4j.simple>
 		<version.org.slf4j.api>1.5.10</version.org.slf4j.api>

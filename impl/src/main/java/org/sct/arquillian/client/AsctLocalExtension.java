@@ -16,7 +16,6 @@ import org.jboss.arquillian.core.spi.LoadableExtension;
 import org.jboss.arquillian.test.spi.event.suite.BeforeClass;
 import org.sct.arquillian.AsctConstants;
 import org.sct.arquillian.deployment.AsctDependencyResolver;
-import org.sct.arquillian.util.NotManagedByContainer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,81 +24,67 @@ import org.sct.arquillian.util.exception.AsctException;
 
 /**
  * Extension loader for client side operations.
- * 
+ *
  * @author Andrin Bertschi
  */
-public class AsctLocalExtension implements LoadableExtension {
+public class AsctLocalExtension implements LoadableExtension
+{
+    @Override
+    public void register(ExtensionBuilder builder)
+    {
+        builder.service(ApplicationArchiveProcessor.class, AsctDependencyResolver.class)
+                .service(AuxiliaryArchiveAppender.class, AsctArchiveAppender.class)
+                .service(ApplicationArchiveProcessor.class, LocalResourceProcessor.class)
+                .observer(AsctDescriptor.class);
+    }
 
-	private static final Logger LOG = LoggerFactory.getLogger(AsctLocalExtension.class);
+    public static class AsctDescriptor
+    {
 
-	@Override
-	public void register(ExtensionBuilder builder) {
-		LOG.debug("Registering Asct client loadable extensions");
+        @Inject
+        @ApplicationScoped
+        InstanceProducer<AsctDescriptor> instanceProducer;
 
-		registerBeans(builder);
-		registerServices(builder);
+        @Inject
+        Instance<ArquillianDescriptor> descriptor;
 
-		LOG.debug("Asct client loadable extensions registered");
-	}
+        private static AsctDescriptor instance;
 
-	private void registerServices(ExtensionBuilder builder) {
-		builder
-			.service(ApplicationArchiveProcessor.class, AsctDependencyResolver.class)
-			.service(AuxiliaryArchiveAppender.class, AsctArchiveAppender.class)
-			.service(ApplicationArchiveProcessor.class, LocalResourceProcessor.class);
-	}
+        public void init(@Observes(precedence = 200) BeforeClass before)
+        {
+            instance = this;
+            this.instanceProducer.set(instance);
+        }
 
-	private void registerBeans(ExtensionBuilder builder) {
-		builder.observer(AsctDescriptor.class);
-	}
+        public static AsctDescriptor get()
+        {
+            if (instance == null)
+            {
+                throw new AsctException(
+                        "Managed dependencies are not loaded. Observers in LoadableExtension are wrong configured!");
+            }
+            return instance;
+        }
 
-	/**
-	 * Descriptor to obtain extension specific configurations such as settings specified in
-	 * {@code arquillian.xml}.
-	 */
-	public static class AsctDescriptor {
+        public Map<String, String> getProperties()
+        {
+            Map<String, String> props = new HashMap<>();
+            props.put(AsctConstants.EXT_PROPERTY_RECORDING_ROOT, "./target/");
+            props.put(AsctConstants.EXT_PROPERTY_MOCKING_ROOT, "./");
 
-	    @Inject
-	    @ApplicationScoped
-	    private InstanceProducer<AsctDescriptor> instanceProducer;
+            for (ExtensionDef e : this.descriptor.get().getExtensions())
+            {
+                if (e.getExtensionName().equals(AsctConstants.EXT_NAME))
+                {
+                    for (Map.Entry<String, String> entry : e.getExtensionProperties().entrySet())
+                    {
+                        props.put(entry.getKey(), entry.getValue());
+                    }
+                    break;
+                }
+            }
+            return props;
+        }
 
-	    @Inject
-	    private Instance<ArquillianDescriptor> descriptor;
-
-	    private static AsctDescriptor instance;
-
-	    public AsctDescriptor() {}
-
-	    @NotManagedByContainer
-	    public AsctDescriptor(InstanceProducer<AsctDescriptor> instanceProducer, Instance<ArquillianDescriptor> descriptor) {
-
-	        this.instanceProducer = instanceProducer;
-	        this.descriptor = descriptor;
-	    }
-
-	    public void init(@Observes(precedence = 200) BeforeClass before) {
-	        instance = this;
-	        this.instanceProducer.set(instance);
-	    }
-
-	    public static AsctDescriptor get() {
-	        if (instance == null) {
-	            throw new AsctException(
-	                    "Managed dependencies are not loaded. Observers in LoadableExtension are wrong configured!");
-	        }
-	        return instance;
-	    }
-
-	    public Map<String, String> getProperties() {
-	        Map<String, String> props = new HashMap<>();
-	        for (ExtensionDef e : this.descriptor.get().getExtensions()) {
-	            if (e.getExtensionName().equals(AsctConstants.EXT_NAME)) {
-	                props = e.getExtensionProperties();
-	                break;
-	            }
-	        }
-	        return props;
-	    }
-
-	}
+    }
 }

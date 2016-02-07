@@ -37,6 +37,7 @@ public class AnnotationExtractors {
                 Annotation annotaiton = testMethod.getAnnotation(extractor.getAnnotationType());
                 Resource resource = extractor.extractAsResource(testClass, testMethod, annotaiton);
                 resources.add(resource);
+                System.out.println("resource " + resource);
             }
         return resources;
     }

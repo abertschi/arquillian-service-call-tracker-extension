@@ -7,9 +7,9 @@ import org.jboss.shrinkwrap.api.asset.Asset;
  */
 public interface Resource {
 
-    String getBusinessKey();
+    String getName();
 
-    String getLocation();
+    String getPath();
 
     Asset getAsset();
 

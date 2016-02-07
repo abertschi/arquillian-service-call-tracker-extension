@@ -19,8 +19,8 @@ public class ResourceIndexBuilderImpl implements ResourceIndexBuilder {
         ResourceIndex index = new ResourceIndex();
         index.setLocation(location);
         for (Resource resource : resources) {
-            String key = resource.getBusinessKey();
-            String value = resource.getLocation();
+            String key = resource.getName();
+            String value = resource.getPath();
             index.putIndex(key, value);
             
             LOG.debug("Creating index resource using {}={}", new Object[] {key, value});

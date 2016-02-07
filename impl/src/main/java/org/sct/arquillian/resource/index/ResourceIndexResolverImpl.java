@@ -33,8 +33,8 @@ public class ResourceIndexResolverImpl implements ResourceIndexResolver {
         for (Entry<String, String> e : properties.entrySet()) {
             ResourceImpl resource = new ResourceImpl();
             resource.setAsset(new UrlAsset(resolver.resolve(e.getValue())));
-            resource.setLocation(e.getValue());
-            resource.setBusinessKey(e.getKey());
+            resource.setPath(e.getValue());
+            resource.setName(e.getKey());
             resources.add(resource);
             
             LOG.debug("Resolving index resource using {}={}", new Object[] {e.getKey(), e.getValue()});

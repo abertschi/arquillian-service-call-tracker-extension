@@ -13,19 +13,19 @@ public class ResourceImpl implements Resource {
 
     private String location;
 
-    private String businessKey;
+    private String name;
 
     @Override
-    public String getBusinessKey() {
-        if (this.businessKey == null || this.businessKey.isEmpty()) {
-            return StringUtils.extractFileName(getLocation());
+    public String getName() {
+        if (this.name == null || this.name.isEmpty()) {
+            return StringUtils.extractFileName(getPath());
         } else {
-            return this.businessKey;
+            return this.name;
         }
     }
 
     @Override
-    public String getLocation() {
+    public String getPath() {
         return this.location;
     }
 
@@ -38,12 +38,12 @@ public class ResourceImpl implements Resource {
         this.asset = asset;
     }
 
-    public void setLocation(String location) {
+    public void setPath(String location) {
         this.location = location;
     }
 
-    public void setBusinessKey(String businessKey) {
-        this.businessKey = businessKey;
+    public void setName(String businessKey) {
+        this.name = businessKey;
     }
 
 }

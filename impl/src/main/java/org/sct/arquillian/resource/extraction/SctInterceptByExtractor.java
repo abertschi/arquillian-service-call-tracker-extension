@@ -43,10 +43,10 @@ public class SctInterceptByExtractor extends
             resource = new ResourceImpl();
             file = extractLocation(annot);
             ensureIfFileExist(file, testClass, testMethod);
-            resource.setLocation(file.getPath());
+            resource.setPath(file.getPath());
             resource.setAsset(new FileAsset(file));
             ResourceBusinessNaming naming = new ResourceBusinessNaming(testClass, testMethod);
-            resource.setBusinessKey(naming.create());
+            resource.setName(naming.create());
 
         } catch (Exception e) {
             handleException(testClass, testMethod, file, e);
