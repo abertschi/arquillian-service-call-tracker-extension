@@ -61,12 +61,6 @@
 
 			<dependency>
 				<groupId>org.sct.arquillian</groupId>
-				<artifactId>arquillian-service-call-tracker-extension-tools</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.sct.arquillian</groupId>
 				<artifactId>arquillian-service-call-tracker-extension-bulk</artifactId>
 				<version>${project.version}</version>
 			</dependency>

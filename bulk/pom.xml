@@ -36,12 +36,6 @@
 		</dependency>
 
 		<dependency>
-			<groupId>org.sct.arquillian</groupId>
-			<artifactId>arquillian-service-call-tracker-extension-tools</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-
-		<dependency>
 			<groupId>org.eu.ingwar.tools</groupId>
 			<artifactId>arquillian-suite-extension</artifactId>
 			<version>${version.org.eu.ingwar.tools.arquillian-suite-extension}</version>
