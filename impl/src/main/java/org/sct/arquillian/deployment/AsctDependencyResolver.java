@@ -15,6 +15,7 @@ import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.resolver.api.ResolutionException;
 import org.jboss.shrinkwrap.resolver.api.maven.Maven;
 
+import org.jboss.shrinkwrap.resolver.api.maven.PomEquippedResolveStage;
 import org.sct.arquillian.AsctConstants;
 import org.sct.arquillian.client.AsctLocalExtension.AsctDescriptor;
 import org.sct.arquillian.util.exception.AsctException;
@@ -32,15 +33,29 @@ public class AsctDependencyResolver implements ProtocolArchiveProcessor
     {
         if (archive instanceof LibraryContainer)
         {
+            String settingsXml = AsctDescriptor.get().getProperties().get(AsctConstants.SETTINGS_XML);
+            PomEquippedResolveStage resolver;
+            if (settingsXml != null)
+            {
+                resolver = Maven
+                        .configureResolver()
+                        .fromFile(settingsXml)
+                        .offline()
+                        .loadPomFromFile("pom.xml");
+            }
+            else
+            {
+                resolver = Maven
+                        .configureResolver()
+                        .offline()
+                        .loadPomFromFile("pom.xml");
+            }
+
             LibraryContainer<?> container = (LibraryContainer<?>) archive;
-            container.addAsLibraries(Maven.resolver().offline()
-                    .loadPomFromFile("pom.xml").resolve("org.sct:service-call-tracker-impl")
-                    .withClassPathResolution(true).withTransitivity().as(File.class));
+            container.addAsLibraries(resolver
+                    .resolve("org.sct:service-call-tracker-impl", "commons-io:commons-io")
+                    .withTransitivity().as(File.class));
 
-            container.addAsLibraries(Maven.resolver().offline()
-                    .loadPomFromFile("pom.xml").resolve("commons-io:commons-io")
-                    .withClassPathResolution(true).withTransitivity().as(File.class));
         }
-
     }
 }

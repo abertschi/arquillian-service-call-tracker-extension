@@ -21,4 +21,6 @@ public class AsctConstants
 
     public static final String RESOURCE_RECORDING_INDEX = RESOURCE_ROOT + "asct-recording-index.properties";
 
+    public static final String SETTINGS_XML = "mvnSettings";
+
 }
