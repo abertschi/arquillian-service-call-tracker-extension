@@ -1,0 +1,55 @@
+package ch.abertschi.sct.arquillian;
+
+
+import org.jboss.arquillian.container.test.impl.client.deployment.command.AbstractCommand;
+import ch.abertschi.sct.arquillian.resource.model.Resource;
+
+/**
+ * Created by abertschi on 07/02/16.
+ */
+public class ResourceCommand extends AbstractCommand<Boolean>
+{
+
+    private String content;
+
+    private String path;
+
+    private String name;
+
+    public ResourceCommand(String name, String path, String content)
+    {
+        this.name = name;
+        this.content = content;
+        this.path = path;
+    }
+
+    public String getName()
+    {
+        return name;
+    }
+
+    public void setName(String name)
+    {
+        this.name = name;
+    }
+
+    public String getPath()
+    {
+        return path;
+    }
+
+    public void setPath(String path)
+    {
+        this.path = path;
+    }
+
+    public String getContent()
+    {
+        return content;
+    }
+
+    public void setContent(String content)
+    {
+        this.content = content;
+    }
+}

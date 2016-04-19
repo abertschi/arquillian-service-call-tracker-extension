@@ -2,7 +2,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>org.sct.arquillian</groupId>
+	<groupId>ch.abertschi.sct.arquillian</groupId>
 	<artifactId>arquillian-service-call-tracker-extension</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
@@ -11,7 +11,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
 		<!-- dep versions -->
-		<version.org.sct>0.0.1-SNAPSHOT</version.org.sct>
+		<version.ch.abertschi.sct>0.0.1-SNAPSHOT</version.ch.abertschi.sct>
 		<version.junit>4.8.1</version.junit>
 		<version.org.jboss.as.arquillian.remote>7.1.1.Final</version.org.jboss.as.arquillian.remote>
 		<version.javax.annotation.jsr250-api>1.0</version.javax.annotation.jsr250-api>
@@ -151,9 +151,9 @@
 			<!-- ================================= -->
 
 			<dependency>
-				<groupId>org.sct</groupId>
+				<groupId>ch.abertschi.sct</groupId>
 				<artifactId>service-call-tracker-bom</artifactId>
-				<version>${version.org.sct}</version>
+				<version>${version.ch.abertschi.sct}</version>
 				<scope>import</scope>
 			</dependency>
 
