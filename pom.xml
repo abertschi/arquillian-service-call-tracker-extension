@@ -2,6 +2,12 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
+	<parent>
+		<groupId>ch.abertschi</groupId>
+		<artifactId>abertschi-oss-parent</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+
 	<groupId>ch.abertschi.sct.arquillian</groupId>
 	<artifactId>arquillian-service-call-tracker-extension</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
@@ -26,23 +32,26 @@
 		<version.org.eu.ingwar.tools.arquillian-suite-extension>1.1.1</version.org.eu.ingwar.tools.arquillian-suite-extension>
 	</properties>
 
-	<profiles>
-		<profile>
-			<id>deploy</id>
-			<activation><activeByDefault>true</activeByDefault></activation>
-			<distributionManagement>
-				<repository>
-					<id>ftp-repository</id>
-					<url>ftp://abertschi.ch/</url>
-				</repository>
-			</distributionManagement>
-		</profile>
-	</profiles>
-
 	<repositories>
 		<repository>
-			<id>ftp-repositor</id>
-			<url>http://abertschi.ch/maven-repository</url>
+			<id>abertschi.snapshots</id>
+			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+		<repository>
+			<id>abertschi.releases</id>
+			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
 		</repository>
 	</repositories>
 
