@@ -48,12 +48,11 @@ public class RemoteResourceProcessor
 
     private void loadRecordingFiles() throws IOException
     {
-        /**
-         * Arquillian container can be executed on another host than arquillian client.
-         * serverRecordings representing recordings files on container host, whereas
-         * clientRecordings representing recording files on client.
-         * At the end of test executions, serverRecordings must be sent to client
-         * and written to their corresponding files on client.
+        /*
+         * Arquillian container can be executed on another host than Arquillian client.
+         * serverRecordings store recording files on container host, whereas
+         * clientRecordings store recording files on client.
+         * At the end of test executions, serverRecordings must be transmitted to client.
          */
         List<Resource> serverRecordings = new ArrayList<>();
         List<Resource> clientRecordings = new ArrayList<>();

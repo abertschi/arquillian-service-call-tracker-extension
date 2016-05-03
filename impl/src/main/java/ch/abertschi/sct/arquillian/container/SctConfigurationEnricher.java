@@ -22,13 +22,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Sets configuration required by {@code ServiceCallTracker} for current test execution.
+ * Sets service call tracker configuration for current test execution.
  *
  * @author Andrin Bertschi
  */
 public class SctConfigurationEnricher
 {
-
     @Inject
     Instance<ResourceData> configurations;
 
@@ -63,7 +62,16 @@ public class SctConfigurationEnricher
         {
             Resource rOnClient = configurations.get().getRecordingResoucesOnClientAsMap().get(r.getName());
             String content = convertStreamToString(r.getAsset().openStream());
-            commandService.get().execute(new ResourceCommand(r.getName(), rOnClient.getPath(), content));
+            if (content != null && !content.isEmpty())
+            {
+                /*
+                 * TODO: Suite Extension compatibility hack
+                 * AfterSuite event is fired several times although
+                 * all data is within the same suite.
+                 * Send only those recordings which contain data in order not to overwrite already written ones.
+                 */
+                commandService.get().execute(new ResourceCommand(r.getName(), rOnClient.getPath(), content));
+            }
         }
         initServiceCallTracker(this.sctConfig);
     }
