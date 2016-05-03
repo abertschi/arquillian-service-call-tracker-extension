@@ -11,6 +11,7 @@ import org.jboss.arquillian.core.api.annotation.ApplicationScoped;
 import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.core.spi.Manager;
 import org.jboss.shrinkwrap.api.Archive;
+import org.jboss.shrinkwrap.api.Filters;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
@@ -37,7 +38,7 @@ public class AsctArchiveAppender implements AuxiliaryArchiveAppender
     {
         return ShrinkWrap
                 .create(JavaArchive.class, "service-call-tracker-extension.jar")
-                .addPackages(true, "ch.abertschi.sct.arquillian")
+                .addPackages(true, Filters.exclude(getClass().getPackage()), "ch.abertschi.sct.arquillian")
                 .addAsServiceProvider(RemoteLoadableExtension.class, AsctRemoteExtension.class)
                 .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
     }

@@ -183,7 +183,7 @@
             <groupId>ch.abertschi.sct</groupId>
             <artifactId>service-call-tracker-impl</artifactId>
             <version>${version.ch.abertschi.sct}</version>
-            <scope>test</scope>
+            <scope>compile</scope>
         </dependency>
 
         <dependency>

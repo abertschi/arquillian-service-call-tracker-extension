@@ -4,6 +4,10 @@ import org.jboss.arquillian.container.test.spi.TestDeployment;
 import org.jboss.arquillian.container.test.spi.client.deployment.ProtocolArchiveProcessor;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.container.LibraryContainer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.File;
 
 /**
  * Appender to include server side libraries used by this extension.
@@ -12,7 +16,9 @@ import org.jboss.shrinkwrap.api.container.LibraryContainer;
  */
 public class AsctDependencyResolver implements ProtocolArchiveProcessor
 {
-    private static final String SCT_IMPL = "ch.abertschi.sct:service-call-tracker-impl:0.0.1-SNAPSHOT";
+    private static final Logger LOG = LoggerFactory.getLogger(AsctDependencyResolver.class);
+
+    private static final String SCT_IMPL = "ch.abertschi.sct:service-call-tracker-impl:0.0.1-alpha2-SNAPSHOT";
 
     private static final String COMMONS_IO = "commons-io:commons-io:2.4";
 
@@ -22,8 +28,12 @@ public class AsctDependencyResolver implements ProtocolArchiveProcessor
         if (archive instanceof LibraryContainer)
         {
             LibraryContainer<?> container = (LibraryContainer<?>) archive;
-            container.addAsLibraries(ResolverUtil.get()
-                    .resolve(SCT_IMPL, COMMONS_IO).withTransitivity().asFile());
+            for(File f: ResolverUtil.get()
+                    .resolve(SCT_IMPL, COMMONS_IO).withTransitivity().asFile())
+            {
+                LOG.debug("resolving file " + f.getAbsolutePath());
+                container.addAsLibraries(f);
+            }
         }
     }
 }

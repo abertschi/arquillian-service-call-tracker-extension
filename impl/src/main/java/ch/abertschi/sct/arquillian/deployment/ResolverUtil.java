@@ -24,9 +24,14 @@ public class ResolverUtil
 
     private ResolverUtil()
     {
+        // TODO: Resolve via plugin not working, custom artifact repository not chosen
         if (ResolverConfig.isShrinkwrapResolveViaPlugin())
         {
-            mPomEquippedResolver = Maven.configureResolverViaPlugin();
+            mPomEquippedResolver = Maven.configureResolver()
+                    .workOffline(ResolverConfig.isMavenOffline())
+                    .fromFile(ResolverConfig.getMavenExecutionGlobalSettings())
+                    .offline(ResolverConfig.isMavenOffline())
+                    .loadPomFromFile(ResolverConfig.getMavenExecutionPomFile());
         }
         else if (ResolverConfig.isShrinkwrapResolveViaPom())
         {
