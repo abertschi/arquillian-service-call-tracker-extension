@@ -17,7 +17,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
 		<!-- dep versions -->
-		<version.ch.abertschi.sct>0.0.1-alpha2-SNAPSHOT</version.ch.abertschi.sct>
+		<version.ch.abertschi.sct>0.0.1-alpha2</version.ch.abertschi.sct>
 		<version.junit>4.8.1</version.junit>
 		<version.org.jboss.as.arquillian.remote>7.1.1.Final</version.org.jboss.as.arquillian.remote>
 		<version.javax.annotation.jsr250-api>1.0</version.javax.annotation.jsr250-api>

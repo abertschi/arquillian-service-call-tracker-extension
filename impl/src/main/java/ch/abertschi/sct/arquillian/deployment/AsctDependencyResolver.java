@@ -18,7 +18,7 @@ public class AsctDependencyResolver implements ProtocolArchiveProcessor
 {
     private static final Logger LOG = LoggerFactory.getLogger(AsctDependencyResolver.class);
 
-    private static final String SCT_IMPL = "ch.abertschi.sct:service-call-tracker-impl:0.0.1-alpha2-SNAPSHOT";
+    private static final String SCT_IMPL = "ch.abertschi.sct:service-call-tracker-impl:0.0.1-alpha2";
 
     private static final String COMMONS_IO = "commons-io:commons-io:2.4";
 
