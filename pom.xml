@@ -32,6 +32,21 @@
 		<version.org.eu.ingwar.tools.arquillian-suite-extension>1.1.1</version.org.eu.ingwar.tools.arquillian-suite-extension>
 	</properties>
 
+	<developers>
+		<developer>
+			<name>Andrin Bertschi</name>
+			<email>andrin.bertschi@gmail.com</email>
+		</developer>
+	</developers>
+
+	<url>https://github.com/abertschi/service-call-tracker</url>
+
+	<licenses>
+		<license>
+			<name>Apache 2.0</name>
+		</license>
+	</licenses>
+
 	<repositories>
 		<repository>
 			<id>abertschi.snapshots</id>
@@ -86,6 +101,25 @@
 			</plugins>
 		</pluginManagement>
 		<plugins>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.7.5.201505241946</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>report</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>2.5.1</version>
