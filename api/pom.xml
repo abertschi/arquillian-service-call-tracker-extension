@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>ch.abertschi.sct.arquillian</groupId>
 		<artifactId>arquillian-service-call-tracker-extension</artifactId>
-		<version>0.0.1-alpha2</version>
+		<version>0.0.2-alpha1-SNAPSHOT</version>
 	</parent>
 	
 	<artifactId>arquillian-service-call-tracker-extension-api</artifactId>
@@ -15,6 +15,11 @@
 	</properties>
 
 	<dependencies>
+		<dependency>
+			<groupId>ch.abertschi.sct</groupId>
+			<artifactId>service-call-tracker-api</artifactId>
+			<version>${version.ch.abertschi.sct}</version>
+		</dependency>
 	
 	</dependencies>
 </project>

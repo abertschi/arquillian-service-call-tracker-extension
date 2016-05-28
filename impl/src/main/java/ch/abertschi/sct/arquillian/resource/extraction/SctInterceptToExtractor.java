@@ -7,7 +7,7 @@ import java.lang.reflect.Method;
 import org.jboss.arquillian.test.spi.TestClass;
 import org.jboss.shrinkwrap.api.asset.FileAsset;
 
-import ch.abertschi.sct.arquillian.AsctConstants;
+import ch.abertschi.sct.arquillian.Constants;
 import ch.abertschi.sct.arquillian.api.SctInterceptBy;
 import ch.abertschi.sct.arquillian.api.SctInterceptTo;
 import ch.abertschi.sct.arquillian.client.AsctLocalExtension;
@@ -29,7 +29,7 @@ public class SctInterceptToExtractor extends
     {
         super(SctInterceptTo.class, ResourceImpl.class);
         this.directoryRoot = new File("./", descriptor.getProperties().get(
-                AsctConstants.EXT_PROPERTY_RECORDING_ROOT));
+                Constants.EXT_PROPERTY_RECORDING_ROOT));
     }
 
     @Override

@@ -1,6 +1,5 @@
 package ch.abertschi.sct.arquillian.client;
 
-import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,7 +17,7 @@ import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ch.abertschi.sct.arquillian.AsctConstants;
+import ch.abertschi.sct.arquillian.Constants;
 import ch.abertschi.sct.arquillian.api.SctInterceptBy;
 import ch.abertschi.sct.arquillian.api.SctInterceptTo;
 import ch.abertschi.sct.arquillian.bootstrap.TestClassScanner;
@@ -77,12 +76,12 @@ public class LocalResourceProcessor implements ApplicationArchiveProcessor
         }
 
         final ResourcePackager packager = new ResourcePackager();
-        mockResources = packager.moveResources(AsctConstants.RESOURCE_ROOT, mockResources);
+        mockResources = packager.moveResources(Constants.RESOURCE_ROOT, mockResources);
 
         Resource mockIndex = new ResourceIndexBuilderImpl().
-                createIndex(AsctConstants.RESOURCE_MOCKING_INDEX, mockResources);
+                createIndex(Constants.RESOURCE_MOCKING_INDEX, mockResources);
         Resource recordIndex = new ResourceIndexBuilderImpl().
-                createIndex(AsctConstants.RESOURCE_RECORDING_INDEX, recordingResources);
+                createIndex(Constants.RESOURCE_RECORDING_INDEX, recordingResources);
 
         JavaArchive resourcesJar = ShrinkWrap.create(JavaArchive.class, EXTENSION_JAR_NAME);
         packager.addResourcesToArchive(resourcesJar, mockResources);

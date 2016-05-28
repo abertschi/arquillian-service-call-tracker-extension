@@ -7,7 +7,6 @@ import org.jboss.arquillian.config.descriptor.api.ArquillianDescriptor;
 import org.jboss.arquillian.config.descriptor.api.ExtensionDef;
 import org.jboss.arquillian.container.test.spi.client.deployment.ApplicationArchiveProcessor;
 import org.jboss.arquillian.container.test.spi.client.deployment.AuxiliaryArchiveAppender;
-import org.jboss.arquillian.container.test.spi.client.deployment.AuxiliaryArchiveProcessor;
 import org.jboss.arquillian.container.test.spi.client.deployment.ProtocolArchiveProcessor;
 import org.jboss.arquillian.core.api.Instance;
 import org.jboss.arquillian.core.api.InstanceProducer;
@@ -16,10 +15,8 @@ import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.core.api.annotation.Observes;
 import org.jboss.arquillian.core.spi.LoadableExtension;
 import org.jboss.arquillian.test.spi.event.suite.BeforeClass;
-import ch.abertschi.sct.arquillian.AsctConstants;
+import ch.abertschi.sct.arquillian.Constants;
 import ch.abertschi.sct.arquillian.deployment.AsctDependencyResolver;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import ch.abertschi.sct.arquillian.deployment.AsctArchiveAppender;
 import ch.abertschi.sct.arquillian.util.exception.AsctException;
@@ -75,12 +72,12 @@ public class AsctLocalExtension implements LoadableExtension
             /*
              * Defaults:
              */
-            props.put(AsctConstants.EXT_PROPERTY_RECORDING_ROOT, "./target/");
-            props.put(AsctConstants.EXT_PROPERTY_MOCKING_ROOT, "./");
+            props.put(Constants.EXT_PROPERTY_RECORDING_ROOT, "./target/");
+            props.put(Constants.EXT_PROPERTY_MOCKING_ROOT, "./");
 
             for (ExtensionDef e : this.descriptor.get().getExtensions())
             {
-                if (e.getExtensionName().equals(AsctConstants.EXT_NAME))
+                if (e.getExtensionName().equals(Constants.EXT_NAME))
                 {
                     for (Map.Entry<String, String> entry : e.getExtensionProperties().entrySet())
                     {

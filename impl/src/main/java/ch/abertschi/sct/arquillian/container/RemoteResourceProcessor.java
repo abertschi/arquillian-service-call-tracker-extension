@@ -19,7 +19,7 @@ import ch.abertschi.sct.arquillian.util.exception.AsctException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ch.abertschi.sct.arquillian.AsctConstants;
+import ch.abertschi.sct.arquillian.Constants;
 import ch.abertschi.sct.arquillian.resource.model.Resource;
 
 /**
@@ -56,7 +56,7 @@ public class RemoteResourceProcessor
          */
         List<Resource> serverRecordings = new ArrayList<>();
         List<Resource> clientRecordings = new ArrayList<>();
-        for (Map.Entry<String, String> e : loadResourcesFromJar(AsctConstants.RESOURCE_RECORDING_INDEX).entrySet())
+        for (Map.Entry<String, String> e : loadResourcesFromJar(Constants.RESOURCE_RECORDING_INDEX).entrySet())
         {
             File temp = File.createTempFile(e.getKey(), ".xml");
             temp.deleteOnExit();
@@ -80,7 +80,7 @@ public class RemoteResourceProcessor
     private void loadReplayingFiles()
     {
         List<Resource> replaying = new ArrayList<>();
-        for (Map.Entry<String, String> e : loadResourcesFromJar(AsctConstants.RESOURCE_MOCKING_INDEX).entrySet())
+        for (Map.Entry<String, String> e : loadResourcesFromJar(Constants.RESOURCE_MOCKING_INDEX).entrySet())
         {
             ResourceImpl resource = new ResourceImpl();
             resource.setAsset(new UrlAsset(Thread.currentThread().getContextClassLoader().getResource(e.getValue())));
@@ -103,7 +103,7 @@ public class RemoteResourceProcessor
         }
         catch (IOException e)
         {
-            String m = String.format("Not able to parse properties from %s", AsctConstants.RESOURCE_RECORDING_INDEX);
+            String m = String.format("Not able to parse properties from %s", Constants.RESOURCE_RECORDING_INDEX);
             AsctException asctE = new AsctException(m, e);
             throw asctE;
         }

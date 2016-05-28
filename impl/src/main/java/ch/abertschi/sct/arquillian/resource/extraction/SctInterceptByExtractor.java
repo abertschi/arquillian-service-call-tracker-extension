@@ -8,7 +8,7 @@ import org.jboss.arquillian.test.spi.TestClass;
 import org.jboss.shrinkwrap.api.asset.FileAsset;
 
 import ch.abertschi.sct.arquillian.resource.naming.ResourceNaming;
-import ch.abertschi.sct.arquillian.AsctConstants;
+import ch.abertschi.sct.arquillian.Constants;
 import ch.abertschi.sct.arquillian.api.SctInterceptBy;
 import ch.abertschi.sct.arquillian.client.AsctLocalExtension.AsctDescriptor;
 import ch.abertschi.sct.arquillian.resource.model.ResourceImpl;
@@ -30,7 +30,7 @@ public class SctInterceptByExtractor extends
         super(SctInterceptBy.class, ResourceImpl.class);
 
         this.mockingDirectoryRoot = new File(".",
-                descriptor.getProperties().get(AsctConstants.EXT_PROPERTY_MOCKING_ROOT));
+                descriptor.getProperties().get(Constants.EXT_PROPERTY_MOCKING_ROOT));
     }
 
     @Override
