@@ -1,8 +1,11 @@
 package ch.abertschi.sct.arquillian.client;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import ch.abertschi.sct.arquillian.model.ExtensionConfiguration;
+import ch.abertschi.sct.arquillian.model.RecordTestConfiguration;
 import org.jboss.arquillian.container.test.spi.client.deployment.ApplicationArchiveProcessor;
 import org.jboss.arquillian.core.api.Instance;
 import org.jboss.arquillian.core.api.InstanceProducer;
@@ -52,6 +55,20 @@ public class LocalResourceProcessor implements ApplicationArchiveProcessor
     @Override
     public void process(Archive<?> applicationArchive, TestClass testClass)
     {
+        File sourceBase = new File("./src/main/java");
+        File storageBase = new File("./target");
+
+        RecordCallExtractor recordExtractor = new RecordCallExtractor(sourceBase, storageBase);
+        RecordConfiguration recordClassConfig = recordExtractor.extractClassConfiguration(testClass);
+        List<RecordConfiguration> recordMethodConfigs = recordExtractor.extractMethodConfigurations(testClass);
+
+        RecordTestConfiguration recordTesetConfig = new RecordTestConfiguration()
+                .setMethodConfigurations(recordMethodConfigs)
+                .setClassConfiguration(recordClassConfig);
+        ExtensionConfiguration configuration = new ExtensionConfiguration()
+                .setRecordConfigurations()
+
+
         List<Resource> recordingResources = new ArrayList<>();
         final AnnotationExtractors extraction = new AnnotationExtractors(this.descriptor.get());
         for (TestClass clazz : TestClassScanner.GET.findTestClassAnnotatedBy(SctInterceptTo.class))
