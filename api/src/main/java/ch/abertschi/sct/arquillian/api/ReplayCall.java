@@ -15,7 +15,7 @@ public @interface ReplayCall
 {
     boolean enabled() default true;
 
-    String value();
+    String value() default "";
 
     boolean throwExceptionOnNotFound() default false;
 

@@ -9,6 +9,10 @@ public class Constants
 
     public static final String EXT_PROPERTY_MOCKING_ROOT = "asctLoadingHome";
 
+    public static final String EXT_PROPERTY_EXCEPTION_ON_NOT_FOUND = "throwExceptionOnNotFound";
+
+    public static final String EXT_PROPERTY_THROW_EXCEPTION_ON_WRONG_TYPE = "throwExceptionOnIncompatibleReturnType";
+
     public static final String RESOURCE_ROOT = "/META-INF/sct/";
 
     public static final String RESOURCE_MOCKING_INDEX = RESOURCE_ROOT + "sct-loading-index.properties";

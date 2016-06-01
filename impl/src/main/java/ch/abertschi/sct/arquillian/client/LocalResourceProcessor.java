@@ -28,9 +28,7 @@ import ch.abertschi.sct.arquillian.resource.index.ResourceIndexBuilderImpl;
 import ch.abertschi.sct.arquillian.resource.model.Resource;
 
 /**
- * Processor which extracts and packages all resources to the archive.
- *
- * @author Andrin Bertschi
+ * Bundle all configuration into an archive to make it accessible on the server
  */
 public class LocalResourceProcessor implements ApplicationArchiveProcessor
 {
@@ -54,7 +52,6 @@ public class LocalResourceProcessor implements ApplicationArchiveProcessor
     @Override
     public void process(Archive<?> applicationArchive, TestClass testClass)
     {
-        // TODO: scan for annotations if started with suitextension
         List<Resource> recordingResources = new ArrayList<>();
         final AnnotationExtractors extraction = new AnnotationExtractors(this.descriptor.get());
         for (TestClass clazz : TestClassScanner.GET.findTestClassAnnotatedBy(SctInterceptTo.class))

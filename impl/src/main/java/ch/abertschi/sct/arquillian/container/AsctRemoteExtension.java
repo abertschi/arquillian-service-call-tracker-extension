@@ -16,8 +16,8 @@ public class AsctRemoteExtension implements RemoteLoadableExtension
     @Override
     public void register(ExtensionBuilder builder)
     {
-        builder.observer(SctConfigurationEnricher.class)
-                .observer(RemoteResourceProcessor.class)
-                .observer(CommandServiceProducer.class);
+//        builder.observer(SctConfigurationEnricher.class)
+//                .observer(RemoteResourceProcessor.class)
+//                .observer(CommandServiceProducer.class);
     }
 }
