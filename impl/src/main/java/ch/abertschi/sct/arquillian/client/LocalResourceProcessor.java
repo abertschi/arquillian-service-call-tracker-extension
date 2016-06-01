@@ -1,11 +1,16 @@
 package ch.abertschi.sct.arquillian.client;
 
 import java.io.File;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-import ch.abertschi.sct.arquillian.model.ExtensionConfiguration;
-import ch.abertschi.sct.arquillian.model.RecordTestConfiguration;
+import ch.abertschi.sct.arquillian.annotation.RecordCallExtractor;
+import ch.abertschi.sct.arquillian.annotation.RecordConfiguration;
+import ch.abertschi.sct.arquillian.annotation.ReplayCallExtractor;
+import ch.abertschi.sct.arquillian.annotation.ReplayConfiguration;
+import ch.abertschi.sct.arquillian.ExtensionConfiguration;
+import ch.abertschi.sct.arquillian.RecordTestConfiguration;
+import ch.abertschi.sct.arquillian.ReplayTestConfiguration;
 import org.jboss.arquillian.container.test.spi.client.deployment.ApplicationArchiveProcessor;
 import org.jboss.arquillian.core.api.Instance;
 import org.jboss.arquillian.core.api.InstanceProducer;
@@ -16,19 +21,13 @@ import org.jboss.arquillian.test.spi.annotation.SuiteScoped;
 import org.jboss.arquillian.test.spi.event.suite.BeforeClass;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
+import org.jboss.shrinkwrap.api.asset.StringAsset;
+import org.jboss.shrinkwrap.api.container.LibraryContainer;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.abertschi.sct.arquillian.Constants;
-import ch.abertschi.sct.arquillian.api.SctInterceptBy;
-import ch.abertschi.sct.arquillian.api.SctInterceptTo;
-import ch.abertschi.sct.arquillian.bootstrap.TestClassScanner;
-import ch.abertschi.sct.arquillian.client.AsctLocalExtension.AsctDescriptor;
-import ch.abertschi.sct.arquillian.resource.ResourcePackager;
-import ch.abertschi.sct.arquillian.resource.extraction.AnnotationExtractors;
-import ch.abertschi.sct.arquillian.resource.index.ResourceIndexBuilderImpl;
-import ch.abertschi.sct.arquillian.resource.model.Resource;
 
 /**
  * Bundle all configuration into an archive to make it accessible on the server
@@ -45,7 +44,7 @@ public class LocalResourceProcessor implements ApplicationArchiveProcessor
     InstanceProducer<LocalResourceProcessor> instanceProducer;
 
     @Inject
-    Instance<AsctDescriptor> descriptor;
+    Instance<Descriptor> descriptor;
 
     public void init(@Observes(precedence = 50) BeforeClass before)
     {
@@ -62,46 +61,35 @@ public class LocalResourceProcessor implements ApplicationArchiveProcessor
         RecordConfiguration recordClassConfig = recordExtractor.extractClassConfiguration(testClass);
         List<RecordConfiguration> recordMethodConfigs = recordExtractor.extractMethodConfigurations(testClass);
 
-        RecordTestConfiguration recordTesetConfig = new RecordTestConfiguration()
+        RecordTestConfiguration recordTestConfig = new RecordTestConfiguration()
                 .setMethodConfigurations(recordMethodConfigs)
-                .setClassConfiguration(recordClassConfig);
+                .setClassConfiguration(recordClassConfig)
+                .setOrigin(RecordTestConfiguration.createOrigin(testClass.getJavaClass()));
+
+        ReplayCallExtractor replayExtractor = new ReplayCallExtractor(sourceBase, storageBase);
+        ReplayConfiguration replayClassConfig = replayExtractor.extractClassConfiguration(testClass);
+        List<ReplayConfiguration> replayMethodConfigs = replayExtractor.extractMethodConfigurations(testClass);
+
+        ReplayTestConfiguration replayTestConfig = new ReplayTestConfiguration()
+                .setMethodConfigurations(replayMethodConfigs)
+                .setClassConfiguration(replayClassConfig)
+                .setOrigin(ReplayTestConfiguration.createOrigin(testClass.getJavaClass()));
+
         ExtensionConfiguration configuration = new ExtensionConfiguration()
-                .setRecordConfigurations()
+                .setRecordConfigurations(Arrays.asList(recordTestConfig))
+                .setReplayConfigurations(Arrays.asList(replayTestConfig));
 
+        JavaArchive jar = ShrinkWrap.create(JavaArchive.class, EXTENSION_JAR_NAME);
+        jar.add(new StringAsset(configuration.toXml()), Constants.CONFIGURATION_FILE);
 
-        List<Resource> recordingResources = new ArrayList<>();
-        final AnnotationExtractors extraction = new AnnotationExtractors(this.descriptor.get());
-        for (TestClass clazz : TestClassScanner.GET.findTestClassAnnotatedBy(SctInterceptTo.class))
+        if (JavaArchive.class.isInstance(applicationArchive))
         {
-            List<Resource> r = extraction.extractRecordingResources(clazz);
-            if (r != null)
-            {
-                recordingResources.addAll(r);
-            }
+            applicationArchive.merge(jar);
         }
-        List<Resource> mockResources = new ArrayList<>();
-        for (TestClass clazz : TestClassScanner.GET.findTestClassAnnotatedBy(SctInterceptBy.class))
+        else
         {
-            List<Resource> r = extraction.extractMockingResources(clazz);
-            if (r != null)
-            {
-                mockResources.addAll(r);
-            }
+            final LibraryContainer<?> libraryContainer = (LibraryContainer<?>) applicationArchive;
+            libraryContainer.addAsLibrary(jar);
         }
-
-        final ResourcePackager packager = new ResourcePackager();
-        mockResources = packager.moveResources(Constants.RESOURCE_ROOT, mockResources);
-
-        Resource mockIndex = new ResourceIndexBuilderImpl().
-                createIndex(Constants.RESOURCE_MOCKING_INDEX, mockResources);
-        Resource recordIndex = new ResourceIndexBuilderImpl().
-                createIndex(Constants.RESOURCE_RECORDING_INDEX, recordingResources);
-
-        JavaArchive resourcesJar = ShrinkWrap.create(JavaArchive.class, EXTENSION_JAR_NAME);
-        packager.addResourcesToArchive(resourcesJar, mockResources);
-        packager.addResourceToArchive(resourcesJar, recordIndex);
-        packager.addResourceToArchive(resourcesJar, mockIndex);
-
-        packager.mergeArchives(applicationArchive, resourcesJar);
     }
 }

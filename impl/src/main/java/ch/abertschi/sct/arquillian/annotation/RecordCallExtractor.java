@@ -1,7 +1,6 @@
-package ch.abertschi.sct.arquillian.client;
+package ch.abertschi.sct.arquillian.annotation;
 
 import ch.abertschi.sct.arquillian.api.RecordCall;
-import ch.abertschi.sct.arquillian.api.ReplayCall;
 import com.github.underscore.$;
 import org.jboss.arquillian.test.spi.TestClass;
 

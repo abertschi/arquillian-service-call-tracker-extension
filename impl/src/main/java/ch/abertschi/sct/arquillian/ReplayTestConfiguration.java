@@ -1,6 +1,6 @@
-package ch.abertschi.sct.arquillian.model;
+package ch.abertschi.sct.arquillian;
 
-import ch.abertschi.sct.arquillian.client.ReplayConfiguration;
+import ch.abertschi.sct.arquillian.annotation.ReplayConfiguration;
 
 import java.util.List;
 
@@ -12,6 +12,13 @@ public class ReplayTestConfiguration
     private ReplayConfiguration classConfiguration;
 
     private List<ReplayConfiguration> methodConfigurations;
+
+    private String origin;
+
+    public static String createOrigin(Class<?> type)
+    {
+        return type.getCanonicalName();
+    }
 
     public List<ReplayConfiguration> getMethodConfigurations()
     {
@@ -32,6 +39,17 @@ public class ReplayTestConfiguration
     public ReplayTestConfiguration setClassConfiguration(ReplayConfiguration classConfiguration)
     {
         this.classConfiguration = classConfiguration;
+        return this;
+    }
+
+    public String getOrigin()
+    {
+        return origin;
+    }
+
+    public ReplayTestConfiguration setOrigin(String origin)
+    {
+        this.origin = origin;
         return this;
     }
 }

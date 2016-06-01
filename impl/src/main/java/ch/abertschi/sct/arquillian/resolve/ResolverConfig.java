@@ -1,4 +1,4 @@
-package ch.abertschi.sct.arquillian.deployment;
+package ch.abertschi.sct.arquillian.resolve;
 
 /**
  * Created by abertschi on 17/04/16.

@@ -15,8 +15,6 @@ public class Constants
 
     public static final String RESOURCE_ROOT = "/META-INF/sct/";
 
-    public static final String RESOURCE_MOCKING_INDEX = RESOURCE_ROOT + "sct-loading-index.properties";
-
-    public static final String RESOURCE_RECORDING_INDEX = RESOURCE_ROOT + "sct-recording-index.properties";
+    public static final String CONFIGURATION_FILE = RESOURCE_ROOT + "service-call-tracker-config.xml";
 
 }

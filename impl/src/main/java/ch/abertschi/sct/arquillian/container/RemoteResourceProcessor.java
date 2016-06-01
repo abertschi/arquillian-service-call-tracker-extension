@@ -56,7 +56,7 @@ public class RemoteResourceProcessor
          */
         List<Resource> serverRecordings = new ArrayList<>();
         List<Resource> clientRecordings = new ArrayList<>();
-        for (Map.Entry<String, String> e : loadResourcesFromJar(Constants.RESOURCE_RECORDING_INDEX).entrySet())
+        for (Map.Entry<String, String> e : loadResourcesFromJar(Constants.CONFIGURATION_FILE).entrySet())
         {
             File temp = File.createTempFile(e.getKey(), ".xml");
             temp.deleteOnExit();
@@ -103,7 +103,7 @@ public class RemoteResourceProcessor
         }
         catch (IOException e)
         {
-            String m = String.format("Not able to parse properties from %s", Constants.RESOURCE_RECORDING_INDEX);
+            String m = String.format("Not able to parse properties from %s", Constants.CONFIGURATION_FILE);
             AsctException asctE = new AsctException(m, e);
             throw asctE;
         }

@@ -2,7 +2,7 @@ package ch.abertschi.sct.arquillian;
 
 import ch.abertschi.sct.api.Configuration;
 import ch.abertschi.sct.arquillian.api.ReplayCall;
-import ch.abertschi.sct.arquillian.client.ReplayCallExtractor;
+import ch.abertschi.sct.arquillian.annotation.ReplayCallExtractor;
 import org.jboss.arquillian.test.spi.TestClass;
 import org.junit.Test;
 

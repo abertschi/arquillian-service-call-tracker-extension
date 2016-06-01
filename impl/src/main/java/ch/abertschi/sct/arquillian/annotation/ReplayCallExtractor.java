@@ -1,20 +1,13 @@
-package ch.abertschi.sct.arquillian.client;
+package ch.abertschi.sct.arquillian.annotation;
 
-import ch.abertschi.sct.arquillian.api.RecordCall;
 import ch.abertschi.sct.arquillian.api.ReplayCall;
 import ch.abertschi.sct.arquillian.resource.model.Resource;
 import com.github.underscore.$;
 import org.jboss.arquillian.test.spi.TestClass;
 
 import java.io.File;
-import java.io.Serializable;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Stream;
 
 /**
  * Created by abertschi on 01/06/16.

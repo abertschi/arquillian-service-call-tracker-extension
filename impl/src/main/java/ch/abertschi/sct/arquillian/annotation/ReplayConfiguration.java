@@ -1,4 +1,4 @@
-package ch.abertschi.sct.arquillian.client;
+package ch.abertschi.sct.arquillian.annotation;
 
 import ch.abertschi.sct.api.Configuration;
 

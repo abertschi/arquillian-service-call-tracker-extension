@@ -1,6 +1,6 @@
-package ch.abertschi.sct.arquillian.model;
+package ch.abertschi.sct.arquillian;
 
-import ch.abertschi.sct.arquillian.client.RecordConfiguration;
+import ch.abertschi.sct.arquillian.annotation.RecordConfiguration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +13,13 @@ public class RecordTestConfiguration
     private RecordConfiguration classConfiguration;
 
     private List<RecordConfiguration> methodConfigurations = new ArrayList<>();
+
+    private String origin;
+
+    public static String createOrigin(Class<?> type)
+    {
+        return type.getCanonicalName();
+    }
 
     public RecordTestConfiguration()
     {
@@ -37,6 +44,17 @@ public class RecordTestConfiguration
     public RecordTestConfiguration setClassConfiguration(RecordConfiguration classConfiguration)
     {
         this.classConfiguration = classConfiguration;
+        return this;
+    }
+
+    public String getOrigin()
+    {
+        return origin;
+    }
+
+    public RecordTestConfiguration setOrigin(String origin)
+    {
+        this.origin = origin;
         return this;
     }
 }

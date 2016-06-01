@@ -1,7 +1,8 @@
-package ch.abertschi.sct.arquillian.model;
+package ch.abertschi.sct.arquillian;
 
 import com.thoughtworks.xstream.XStream;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -9,12 +10,18 @@ import java.util.List;
  */
 public class ExtensionConfiguration
 {
-    private List<RecordTestConfiguration> recordConfigurations;
+    private List<RecordTestConfiguration> recordConfigurations = new ArrayList<>();
 
-    private List<ReplayTestConfiguration> replayConfigurations;
+    private List<ReplayTestConfiguration> replayConfigurations = new ArrayList<>();
 
-    public ExtensionConfiguration()
+    public String toXml()
     {
+        return new XStream().toXML(this);
+    }
+
+    public static ExtensionConfiguration fromXml(String xml)
+    {
+        return (ExtensionConfiguration) new XStream().fromXML(xml);
     }
 
     public List<RecordTestConfiguration> getRecordConfigurations()
@@ -37,15 +44,5 @@ public class ExtensionConfiguration
     {
         this.replayConfigurations = replayConfigurations;
         return this;
-    }
-
-    public String toXml()
-    {
-        return new XStream().toXML(this);
-    }
-
-    public static ExtensionConfiguration fromXml(String xml)
-    {
-        return (ExtensionConfiguration) new XStream().fromXML(xml);
     }
 }

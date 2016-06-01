@@ -1,8 +1,6 @@
-package ch.abertschi.sct.arquillian.client;
+package ch.abertschi.sct.arquillian.annotation;
 
 import ch.abertschi.sct.api.Configuration;
-
-import java.net.URL;
 
 /**
  * Created by abertschi on 01/06/16.

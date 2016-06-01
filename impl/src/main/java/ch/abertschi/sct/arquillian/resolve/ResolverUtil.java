@@ -1,4 +1,4 @@
-package ch.abertschi.sct.arquillian.deployment;
+package ch.abertschi.sct.arquillian.resolve;
 
 import org.jboss.shrinkwrap.resolver.api.maven.*;
 
