@@ -16,7 +16,7 @@ public @interface RecordCall
 
     boolean enabled() default true;
 
-    String value();
+    String value() default "";
 
     Configuration.INPUT_SOURCE sourceType() default Configuration.INPUT_SOURCE.SINGLE_FILE;
 

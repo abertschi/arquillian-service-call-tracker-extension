@@ -1,11 +1,12 @@
 package ch.abertschi.sct.arquillian.annotation;
 
 import ch.abertschi.sct.arquillian.api.ReplayCall;
-import ch.abertschi.sct.arquillian.resource.model.Resource;
 import com.github.underscore.$;
+import com.thoughtworks.xstream.XStream;
 import org.jboss.arquillian.test.spi.TestClass;
 
 import java.io.File;
+import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
 
@@ -21,6 +22,7 @@ public class ReplayCallExtractor extends AbstractCallExtractor
 
     public ReplayConfiguration extractClassConfiguration(TestClass testClass)
     {
+        System.out.println(new XStream().toXML(testClass));
         return testClass.isAnnotationPresent(ReplayCall.class) ? extractConfiguration(testClass.getJavaClass(),
                 testClass.getAnnotation(ReplayCall.class)) : null;
     }
@@ -28,20 +30,22 @@ public class ReplayCallExtractor extends AbstractCallExtractor
     public List<ReplayConfiguration> extractMethodConfigurations(TestClass testClass)
     {
         return $.map(Arrays.asList(testClass.getMethods(ReplayCall.class)),
-                method -> extractConfiguration(method.getClass(), method.getAnnotation(ReplayCall.class), true));
+                method -> extractConfiguration(testClass.getJavaClass(), method, method.getAnnotation(ReplayCall.class), true));
     }
 
     private ReplayConfiguration extractConfiguration(Class<?> targetClass, ReplayCall annotation)
     {
-        return extractConfiguration(targetClass, annotation, false);
+        return extractConfiguration(targetClass, null, annotation, false);
     }
 
     // returns null if nothing can be extracted
-    private ReplayConfiguration extractConfiguration(Class<?> targetClass, ReplayCall annotation, boolean throwExceptionOnNotFound)
+    private ReplayConfiguration extractConfiguration(Class<?> targetClass, Method targetMethod, ReplayCall annotation, boolean throwExceptionOnNotFound)
     {
         String hint = annotation.value();
         File storage;
-        hint = hint != null ? hint : targetClass.getName();
+        hint = hint != null ? hint : targetMethod != null ? targetMethod.getName() : targetClass.getName();
+
+        System.out.println(targetClass);
 
         storage = extractFromSourceBase(targetClass, hint);
         if (storage == null)
@@ -51,7 +55,7 @@ public class ReplayCallExtractor extends AbstractCallExtractor
         if (storage != null)
         {
             return new ReplayConfiguration()
-                    .setName(targetClass.getName())
+                    .setName(hint)
                     .setEnabled(annotation.enabled())
                     .setPath(storage.getAbsolutePath())
                     .setSourceType(annotation.sourceType())
@@ -61,8 +65,8 @@ public class ReplayCallExtractor extends AbstractCallExtractor
 
         if (throwExceptionOnNotFound)
         {
-            String msg = String.format("Can not look up %s of class %s with value %s.", annotation.getClass().getSimpleName()
-                    , targetClass.getName(), hint);
+            String msg = String.format("Can not locate %s defined with %s in class %s#%s.", hint, annotation.annotationType().getSimpleName()
+                    , targetClass.getName(), targetMethod != null ? targetMethod.getName() : "");
             throw new RuntimeException(msg);
         }
         else

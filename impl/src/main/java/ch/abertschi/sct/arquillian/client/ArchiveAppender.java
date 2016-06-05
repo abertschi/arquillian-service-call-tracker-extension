@@ -8,7 +8,7 @@ import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 
-import ch.abertschi.sct.arquillian.container.RemoteExtension;
+//import ch.abertschi.sct.arquillian.container.RemoteExtension;
 
 public class ArchiveAppender implements AuxiliaryArchiveAppender
 {
@@ -19,7 +19,7 @@ public class ArchiveAppender implements AuxiliaryArchiveAppender
         return ShrinkWrap
                 .create(JavaArchive.class, "service-call-tracker-extension.jar")
                 .addPackages(true, Filters.exclude(getClass().getPackage()), "ch.abertschi.sct.arquillian")
-                .addAsServiceProvider(RemoteLoadableExtension.class, RemoteExtension.class)
+                //.addAsServiceProvider(RemoteLoadableExtension.class, RemoteExtension.class)
                 .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
     }
 }

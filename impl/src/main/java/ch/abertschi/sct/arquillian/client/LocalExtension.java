@@ -13,7 +13,7 @@ public class LocalExtension implements LoadableExtension
     {
         builder.service(ProtocolArchiveProcessor.class, DependencyResolver.class)
                 .service(AuxiliaryArchiveAppender.class, ArchiveAppender.class)
-                .service(ApplicationArchiveProcessor.class, LocalResourceProcessor.class)
+                .service(ApplicationArchiveProcessor.class, LocalArchiveProcessor.class)
                 .observer(ResourceCommandReceiver.class)
                 .observer(Descriptor.class);
     }

@@ -57,16 +57,6 @@ public class RecordCallExtractor extends AbstractCallExtractor
                     .setSkipDoubles(annotation.skipDoubles())
                     .setMode(annotation.mode());
         }
-
-        if (throwExceptionOnNotFound)
-        {
-            String msg = String.format("Can not look up %s of class %s with value %s.", annotation.getClass().getSimpleName()
-                    , targetClass.getName(), hint);
-            throw new RuntimeException(msg);
-        }
-        else
-        {
-            return null;
-        }
+        return null;
     }
 }

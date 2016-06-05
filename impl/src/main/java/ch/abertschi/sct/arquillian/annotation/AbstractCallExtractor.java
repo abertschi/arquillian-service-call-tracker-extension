@@ -26,6 +26,7 @@ public abstract class AbstractCallExtractor
     protected File getStorageFile(File baseDir, String hint)
     {
         File storage = new File(baseDir, hint);
+        System.out.println(storage);
         if (storage.exists())
         {
             return storage;
@@ -54,6 +55,7 @@ public abstract class AbstractCallExtractor
         File storage = null;
         if (hint != null && !hint.trim().isEmpty())
         {
+            System.out.println(hint);
             storage = getStorageFile(baseDir, hint);
             if (storage == null && !hint.endsWith(".xml"))
             {

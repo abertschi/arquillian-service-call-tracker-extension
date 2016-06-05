@@ -234,6 +234,9 @@
                                 <jboss.home>${project.basedir}/target/wildfly-8.1.0.Final</jboss.home>
                                 <module.path>${project.basedir}/target/wildfly-8.1.0.Final/modules</module.path>
                             </systemPropertyVariables>
+                            <trimStackTrace>false</trimStackTrace>
+                            <printSummary>true</printSummary>
+                            <useFile>false</useFile>
                             <redirectTestOutputToFile>false</redirectTestOutputToFile>
                         </configuration>
                     </plugin>
