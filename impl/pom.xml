@@ -233,6 +233,7 @@
                                 <!-- the maven dependency plugin will have already downloaded the server on /target -->
                                 <jboss.home>${project.basedir}/target/wildfly-8.1.0.Final</jboss.home>
                                 <module.path>${project.basedir}/target/wildfly-8.1.0.Final/modules</module.path>
+                                <org.slf4j.simpleLogger.defaultLogLevel>debug</org.slf4j.simpleLogger.defaultLogLevel>
                             </systemPropertyVariables>
                             <trimStackTrace>false</trimStackTrace>
                             <printSummary>true</printSummary>

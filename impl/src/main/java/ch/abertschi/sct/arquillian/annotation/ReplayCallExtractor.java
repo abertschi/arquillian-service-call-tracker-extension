@@ -30,7 +30,10 @@ public class ReplayCallExtractor extends AbstractCallExtractor
     public List<ReplayConfiguration> extractMethodConfigurations(TestClass testClass)
     {
         return $.map(Arrays.asList(testClass.getMethods(ReplayCall.class)),
-                method -> extractConfiguration(testClass.getJavaClass(), method, method.getAnnotation(ReplayCall.class), true));
+                method -> {
+                    System.out.println("metho" + method.getName().toString());
+                    return extractConfiguration(testClass.getJavaClass(), method, method.getAnnotation(ReplayCall.class), true);
+                });
     }
 
     private ReplayConfiguration extractConfiguration(Class<?> targetClass, ReplayCall annotation)

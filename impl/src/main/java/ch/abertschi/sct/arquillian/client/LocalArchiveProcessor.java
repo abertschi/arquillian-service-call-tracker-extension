@@ -11,6 +11,8 @@ import ch.abertschi.sct.arquillian.annotation.ReplayConfiguration;
 import ch.abertschi.sct.arquillian.ExtensionConfiguration;
 import ch.abertschi.sct.arquillian.RecordTestConfiguration;
 import ch.abertschi.sct.arquillian.ReplayTestConfiguration;
+import com.sun.javaws.exceptions.InvalidArgumentException;
+import com.thoughtworks.xstream.XStream;
 import org.jboss.arquillian.container.test.spi.client.deployment.ApplicationArchiveProcessor;
 import org.jboss.arquillian.core.api.Instance;
 import org.jboss.arquillian.core.api.InstanceProducer;
@@ -54,10 +56,19 @@ public class LocalArchiveProcessor implements ApplicationArchiveProcessor
     @Override
     public void process(Archive<?> applicationArchive, TestClass testClass)
     {
-        File sourceBase = new File(new File("."), descriptor.get().getSourBase());
-        File storageBase = new File(new File("."), descriptor.get().getStorageBase());
+        File replayingStorage = new File(new File("."), descriptor.get().getProperty(Constants.PROPERTY_REPLAYING_STORAGE_DIRECTORY));
+        File recordingStorage = new File(new File("."), descriptor.get().getProperty(Constants.PROPERTY_RECORDING_STORAGE_DIRECTORY));
 
-        RecordCallExtractor recordExtractor = new RecordCallExtractor(sourceBase, storageBase);
+        if (descriptor.get().getProperty(Constants.PROPERTY_SOURCE_DIRECTORY) == null)
+        {
+            // todo: ignore execution instead?
+            throw new IllegalArgumentException("Source Directory for service call tracker not set in arquillian.xml");
+        }
+        File sourceBase = new File(new File("."), descriptor.get().getProperty(Constants.PROPERTY_SOURCE_DIRECTORY));
+
+        // read recording annotation
+        // todo: read only if not disabled
+        RecordCallExtractor recordExtractor = new RecordCallExtractor(sourceBase, recordingStorage);
         RecordConfiguration recordClassConfig = recordExtractor.extractClassConfiguration(testClass);
         List<RecordConfiguration> recordMethodConfigs = recordExtractor.extractMethodConfigurations(testClass);
 
@@ -66,7 +77,9 @@ public class LocalArchiveProcessor implements ApplicationArchiveProcessor
                 .setClassConfiguration(recordClassConfig)
                 .setOrigin(RecordTestConfiguration.createOrigin(testClass.getJavaClass()));
 
-        ReplayCallExtractor replayExtractor = new ReplayCallExtractor(sourceBase, storageBase);
+        // read replaying annotation
+        // todo: read only if not disabled
+        ReplayCallExtractor replayExtractor = new ReplayCallExtractor(sourceBase, replayingStorage);
         ReplayConfiguration replayClassConfig = replayExtractor.extractClassConfiguration(testClass);
         List<ReplayConfiguration> replayMethodConfigs = replayExtractor.extractMethodConfigurations(testClass);
 
@@ -75,6 +88,7 @@ public class LocalArchiveProcessor implements ApplicationArchiveProcessor
                 .setClassConfiguration(replayClassConfig)
                 .setOrigin(ReplayTestConfiguration.createOrigin(testClass.getJavaClass()));
 
+        // write configuration xml to archive in order to access in container
         ExtensionConfiguration configuration = new ExtensionConfiguration()
                 .setRecordConfigurations(Arrays.asList(recordTestConfig))
                 .setReplayConfigurations(Arrays.asList(replayTestConfig));
@@ -82,6 +96,7 @@ public class LocalArchiveProcessor implements ApplicationArchiveProcessor
         JavaArchive jar = ShrinkWrap.create(JavaArchive.class, EXTENSION_JAR_NAME);
         jar.add(new StringAsset(configuration.toXml()), Constants.CONFIGURATION_FILE);
 
+        System.out.println(configuration.toXml());
         if (JavaArchive.class.isInstance(applicationArchive))
         {
             applicationArchive.merge(jar);

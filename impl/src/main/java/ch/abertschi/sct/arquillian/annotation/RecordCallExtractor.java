@@ -5,6 +5,7 @@ import com.github.underscore.$;
 import org.jboss.arquillian.test.spi.TestClass;
 
 import java.io.File;
+import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
 
@@ -20,27 +21,57 @@ public class RecordCallExtractor extends AbstractCallExtractor
 
     public RecordConfiguration extractClassConfiguration(TestClass testClass)
     {
-        return testClass.isAnnotationPresent(RecordCall.class) ? extractConfiguration(testClass.getJavaClass(),
-                testClass.getAnnotation(RecordCall.class)) : null;
+        if (testClass.isAnnotationPresent(RecordCall.class))
+        {
+            RecordCall annotation = testClass.getAnnotation(RecordCall.class);
+            String hint;
+            if (annotation.value() != null && !annotation.value().isEmpty())
+            {
+                hint = annotation.value();
+            }
+            else
+            {
+                hint = testClass.getName();
+            }
+
+            File storage = extractFromSourceBase(testClass.getJavaClass(), hint);
+            if (storage == null)
+            {
+                storage = extractFromStorageBase(hint);
+            }
+            if (storage != null)
+            {
+                return new RecordConfiguration()
+                        .setName(testClass.getName())
+                        .setEnabled(annotation.enabled())
+                        .setPath(storage.getAbsolutePath())
+                        .setSourceType(annotation.sourceType())
+                        .setSkipDoubles(annotation.skipDoubles())
+                        .setMode(annotation.mode());
+            }
+        }
+        return null;
     }
 
     public List<RecordConfiguration> extractMethodConfigurations(TestClass testClass)
     {
         return $.map(Arrays.asList(testClass.getMethods(RecordCall.class)),
-                method -> extractConfiguration(method.getClass(), method.getAnnotation(RecordCall.class), true));
-    }
-
-    private RecordConfiguration extractConfiguration(Class<?> targetClass, RecordCall annotation)
-    {
-        return extractConfiguration(targetClass, annotation, false);
+                method -> extractMethodConfiguration(testClass.getJavaClass(), method, method.getAnnotation(RecordCall.class)));
     }
 
     // returns null if nothing can be extracted
-    private RecordConfiguration extractConfiguration(Class<?> targetClass, RecordCall annotation, boolean throwExceptionOnNotFound)
+    private RecordConfiguration extractMethodConfiguration(Class<?> targetClass, Method method, RecordCall annotation)
     {
-        String hint = annotation.value();
         File storage;
-        hint = hint != null ? hint : targetClass.getName();
+        String hint;
+        if (annotation.value() != null && !annotation.value().isEmpty())
+        {
+            hint = annotation.value();
+        }
+        else
+        {
+            hint = method.getName();
+        }
 
         storage = extractFromSourceBase(targetClass, hint);
         if (storage == null)
@@ -50,7 +81,7 @@ public class RecordCallExtractor extends AbstractCallExtractor
         if (storage != null)
         {
             return new RecordConfiguration()
-                    .setName(targetClass.getName())
+                    .setName(targetClass.getName()) // todo:
                     .setEnabled(annotation.enabled())
                     .setPath(storage.getAbsolutePath())
                     .setSourceType(annotation.sourceType())
