@@ -26,8 +26,10 @@ public class ReplayCallExtractor
 
     private File getStorageFile(File baseDir, String hint)
     {
+        System.out.println(baseDir.getAbsolutePath());
         File storage = new File(baseDir, hint);
-        //System.out.println(storage);
+
+        System.out.println("file: " + storage.getAbsolutePath());
         if (storage.exists())
         {
             return storage;

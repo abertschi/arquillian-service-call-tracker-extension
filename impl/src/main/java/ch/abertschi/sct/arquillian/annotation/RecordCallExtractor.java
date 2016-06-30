@@ -36,7 +36,7 @@ public class RecordCallExtractor
         String hint = annotation.value();
         if (hint == null || hint.isEmpty())
         {
-            hint = targetMethod.getName() != null ? targetMethod.getName() : targetClass.getName();
+            hint = targetMethod != null ? targetMethod.getName() : targetClass.getName();
         }
         if (!hint.endsWith(".xml"))
         {

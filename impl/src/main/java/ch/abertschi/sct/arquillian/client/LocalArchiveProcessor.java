@@ -7,13 +7,13 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
+import ch.abertschi.sct.arquillian.*;
 import ch.abertschi.sct.arquillian.annotation.RecordCallExtractor;
 import ch.abertschi.sct.arquillian.annotation.RecordConfiguration;
 import ch.abertschi.sct.arquillian.annotation.ReplayCallExtractor;
 import ch.abertschi.sct.arquillian.annotation.ReplayConfiguration;
-import ch.abertschi.sct.arquillian.ExtensionConfiguration;
-import ch.abertschi.sct.arquillian.RecordTestConfiguration;
-import ch.abertschi.sct.arquillian.ReplayTestConfiguration;
+import ch.abertschi.sct.arquillian.api.RecordCall;
+import ch.abertschi.sct.arquillian.api.ReplayCall;
 import com.github.underscore.$;
 import com.thoughtworks.xstream.XStream;
 import org.jboss.arquillian.container.test.spi.client.deployment.ApplicationArchiveProcessor;
@@ -34,8 +34,6 @@ import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ch.abertschi.sct.arquillian.Constants;
-
 /**
  * Bundle all configuration into an archive to make it accessible on the server
  */
@@ -46,6 +44,10 @@ public class LocalArchiveProcessor implements ApplicationArchiveProcessor
 
     private static final Logger LOG = LoggerFactory.getLogger(LocalArchiveProcessor.class);
 
+    private File recordingStorage;
+    private File replayingStorage;
+    private File sourceBase;
+
     @Inject
     @SuiteScoped
     InstanceProducer<LocalArchiveProcessor> instanceProducer;
@@ -53,83 +55,124 @@ public class LocalArchiveProcessor implements ApplicationArchiveProcessor
     @Inject
     Instance<Descriptor> descriptor;
 
+
     public void init(@Observes(precedence = 50) BeforeClass before)
     {
         this.instanceProducer.set(this);
+        this.replayingStorage = new File(new File("."), descriptor.get().getProperty(Constants.PROPERTY_REPLAYING_STORAGE_DIRECTORY));
+        this.recordingStorage = new File(new File("."), descriptor.get().getProperty(Constants.PROPERTY_RECORDING_STORAGE_DIRECTORY));
+        this.sourceBase = new File(new File("."), descriptor.get().getProperty(Constants.PROPERTY_SOURCE_DIRECTORY));
     }
 
     @Override
     public void process(Archive<?> applicationArchive, TestClass testClass)
     {
-        File replayingStorage = new File(new File("."), descriptor.get().getProperty(Constants.PROPERTY_REPLAYING_STORAGE_DIRECTORY));
-        File recordingStorage = new File(new File("."), descriptor.get().getProperty(Constants.PROPERTY_RECORDING_STORAGE_DIRECTORY));
-
+        if (!descriptor.get().getBooleanProperty(Constants.PROPERTY_ENABLED))
+        {
+            return;
+        }
         if (descriptor.get().getProperty(Constants.PROPERTY_SOURCE_DIRECTORY) == null)
         {
-            // todo: ignore execution instead?
-            throw new IllegalArgumentException("Source Directory for service call tracker not set in arquillian.xml");
+            throw new IllegalArgumentException("Source Directory for service call tracker is not set in arquillian.xml");
         }
-        File sourceBase = new File(new File("."), descriptor.get().getProperty(Constants.PROPERTY_SOURCE_DIRECTORY));
+        if (descriptor.get().getBooleanProperty(Constants.PROPERTY_SUITE_EXTENSION))
+        {
+            List<TestClass> classes = TestClassScanner.GET.findTestClassAnnotatedBy(RecordCall.class);
+            classes.addAll(TestClassScanner.GET.findTestClassAnnotatedBy(ReplayCall.class));
 
+            List<String> added = new ArrayList<>();
+            classes = $.filter(classes, c -> {
+                if (added.contains(c.getName()))
+                {
+                    return false;
+                }
+                else
+                {
+                    added.add(c.getName());
+                    return true;
+                }
+            });
+            classes.forEach(javaClass -> processTestClass(applicationArchive, javaClass));
+        }
+        else
+        {
+            processTestClass(applicationArchive, testClass);
+        }
+    }
+
+    private void processTestClass(Archive<?> applicationArchive, TestClass testClass)
+    {
+        ExtensionConfiguration configuration = new ExtensionConfiguration();
+        if (descriptor.get().getBooleanProperty(Constants.PROPERTY_REPLAYING_ENABLED))
+        {
+            ReplayTestConfiguration replay = extractReplaying(testClass);
+            addReplayingFilesToArchive(applicationArchive, replay);
+            configuration.setReplayConfigurations(Arrays.asList(replay));
+        }
+        if (descriptor.get().getBooleanProperty(Constants.PROPERTY_RECORDING_ENABLED))
+        {
+            configuration.setRecordConfigurations(Arrays.asList(extractRecording(testClass)));
+        }
+
+        // write configuration xml to archive in order to access in container
+        JavaArchive jar = ShrinkWrap.create(JavaArchive.class, EXTENSION_JAR_NAME);
+        jar.add(new StringAsset(configuration.toXml()), Constants.CONFIGURATION_FILE);
+        merge(applicationArchive, jar);
+    }
+
+    private RecordTestConfiguration extractRecording(TestClass testClass)
+    {
         // read recording annotation
-        // todo: read only if not disabled
         RecordCallExtractor recordExtractor = new RecordCallExtractor(recordingStorage);
         RecordConfiguration recordClassConfig = recordExtractor.extractClassConfiguration(testClass);
         List<RecordConfiguration> recordMethodConfigs = recordExtractor.extractMethodConfigurations(testClass);
 
-        RecordTestConfiguration recordTestConfig = new RecordTestConfiguration(testClass.getJavaClass())
+        return new RecordTestConfiguration(testClass.getJavaClass())
                 .setMethodConfigurations(recordMethodConfigs)
                 .setClassConfiguration(recordClassConfig);
+    }
 
-        // read replaying annotation
-        // todo: read only if not disabled
+    private ReplayTestConfiguration extractReplaying(TestClass testClass)
+    {
         ReplayCallExtractor replayExtractor = new ReplayCallExtractor(sourceBase, replayingStorage);
         ReplayConfiguration replayClassConfig = replayExtractor.extractClassConfiguration(testClass);
         List<ReplayConfiguration> replayMethodConfigs = replayExtractor.extractMethodConfigurations(testClass);
 
-        ReplayTestConfiguration replayTestConfig = new ReplayTestConfiguration(testClass.getJavaClass())
+        return new ReplayTestConfiguration(testClass.getJavaClass())
                 .setMethodConfigurations(replayMethodConfigs)
                 .setClassConfiguration(replayClassConfig);
+    }
 
+    private void addReplayingFilesToArchive(Archive rootArchive, ReplayTestConfiguration config)
+    {
         List<ReplayConfiguration> replayings = new ArrayList<>();
-        if (!$.isEmpty(replayMethodConfigs))
+        if (!$.isEmpty(config.getMethodConfigurations()))
         {
-            replayings.addAll(replayMethodConfigs);
+            replayings.addAll(config.getMethodConfigurations());
         }
-        if (replayClassConfig != null)
+        if (config.getClassConfiguration() != null)
         {
-            replayings.add(replayClassConfig);
+            replayings.add(config.getClassConfiguration());
         }
 
-        JavaArchive resources = ShrinkWrap.create(JavaArchive.class, "arquillian-service-call-tracker-resources.jar");
+        JavaArchive resources = ShrinkWrap.create(JavaArchive.class);
         $.forEach(replayings, r -> {
-            System.out.println(r.getPath());
             resources.add(new FileAsset(new File(r.getPath())), r.getOrigin());
             r.setPath(r.getOrigin());
         });
+        merge(rootArchive, resources);
+    }
 
-        // write configuration xml to archive in order to access in container
-        ExtensionConfiguration configuration = new ExtensionConfiguration()
-                .setRecordConfigurations(Arrays.asList(recordTestConfig))
-                .setReplayConfigurations(Arrays.asList(replayTestConfig));
-
-        JavaArchive jar = ShrinkWrap.create(JavaArchive.class, EXTENSION_JAR_NAME);
-        jar.add(new StringAsset(configuration.toXml()), Constants.CONFIGURATION_FILE);
-
-        System.out.println(configuration.toXml());
-        if (JavaArchive.class.isInstance(applicationArchive))
+    private void merge(Archive rootArchive, Archive toAdd)
+    {
+        if (JavaArchive.class.isInstance(rootArchive))
         {
-            applicationArchive.merge(jar);
-            applicationArchive.merge(resources);
+            rootArchive.merge(toAdd);
         }
         else
         {
-            final LibraryContainer<?> libraryContainer = (LibraryContainer<?>) applicationArchive;
-            libraryContainer.addAsLibrary(jar);
-            libraryContainer.addAsLibrary(resources);
-
+            final LibraryContainer<?> libraryContainer = (LibraryContainer<?>) rootArchive;
+            libraryContainer.addAsLibrary(toAdd);
         }
-        applicationArchive.as(ZipExporter.class).exportTo(
-                new File("./out.zip"), true);
     }
 }

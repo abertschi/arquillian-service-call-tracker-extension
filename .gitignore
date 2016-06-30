@@ -20,3 +20,5 @@ cvslog.*
 *.xml.versionsBackup
 .idea
 *.iml
+impl/out.zip
+ch.abertschi.sct.arquillian.CallAnnotationClassTest.xml

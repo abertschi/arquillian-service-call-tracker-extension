@@ -28,7 +28,7 @@ public class ResourceCommandReceiver
         {
             f.delete();
         }
-        LOG.info(String.format("Recording to %s", command.getPath()));
+        LOG.info(String.format("Recording calls to %s", command.getPath()));
         StandardOpenOption open = command.isAppend() ? StandardOpenOption.APPEND : StandardOpenOption.CREATE_NEW;
         Files.write(Paths.get(f.toURI()), command.getContent().getBytes(), open);
     }
