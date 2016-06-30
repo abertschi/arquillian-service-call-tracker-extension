@@ -27,7 +27,7 @@ public class DependencyResolver implements ProtocolArchiveProcessor
             for (File f : ResolverUtil.get()
                     .resolve(SCT_IMPL, COMMONS_IO).withTransitivity().asFile())
             {
-                LOG.info("resolving file " + f.getAbsolutePath());
+                LOG.info("arquillian service call tracker adding extension dependency to archive " + f.getAbsolutePath());
                 container.addAsLibraries(f);
             }
         }

@@ -3,7 +3,7 @@ package ch.abertschi.sct.arquillian;
 public class Constants
 {
 
-    public static final String EXT_NAME = "service-call-tracker";
+    public static final String EXT_NAME = "serviceCallTracker";
 
     public static final String PROPERTY_RECORDING_ENABLED = "recordingEnabled";
 

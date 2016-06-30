@@ -1,7 +1,11 @@
 package ch.abertschi.sct.arquillian;
 
+import ch.abertschi.sct.arquillian.annotation.RecordConfiguration;
+import ch.abertschi.sct.arquillian.annotation.ReplayConfiguration;
+import com.github.underscore.$;
 import com.thoughtworks.xstream.XStream;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,6 +17,75 @@ public class ExtensionConfiguration
     private List<RecordTestConfiguration> recordConfigurations = new ArrayList<>();
 
     private List<ReplayTestConfiguration> replayConfigurations = new ArrayList<>();
+
+    public List<RecordConfiguration> getAllRecordConfigurations()
+    {
+        List<RecordConfiguration> recordings = new ArrayList<>();
+        for (RecordTestConfiguration testConfig : recordConfigurations)
+        {
+            if (testConfig.getClassConfiguration() != null)
+            {
+                recordings.add(testConfig.getClassConfiguration());
+            }
+            if (!$.isEmpty(testConfig.getMethodConfigurations()))
+            {
+                recordings.addAll(testConfig.getMethodConfigurations());
+            }
+        }
+        return recordings;
+    }
+
+    public ReplayTestConfiguration getReplayTestConfiguration(Class<?> testClass)
+    {
+        List<ReplayTestConfiguration> config = $.filter(replayConfigurations, replayConfig -> replayConfig.isTestClass(testClass));
+        return $.isEmpty(config) ? null : config.get(0);
+    }
+
+    public RecordTestConfiguration getRecordTestConfiguration(Class<?> testClass)
+    {
+        List<RecordTestConfiguration> config = $.filter(recordConfigurations, recordConfig -> recordConfig.isTestClass(testClass));
+        return $.isEmpty(config) ? null : config.get(0);
+    }
+
+    public ReplayConfiguration getReplayConfiguration(Class<?> testClass, Method testMethod)
+    {
+        ReplayConfiguration result = null;
+
+        ReplayTestConfiguration testConfig = getReplayTestConfiguration(testClass);
+        if (testConfig != null)
+        {
+            ReplayConfiguration methodConfig = testConfig.getMethodConfiguration(testClass, testMethod);
+            if (methodConfig != null)
+            {
+                result = methodConfig;
+            }
+            else
+            {
+                result = testConfig.getClassConfiguration();
+            }
+        }
+        return result;
+    }
+
+    public RecordConfiguration getRecordConfiguration(Class<?> testClass, Method testMethod)
+    {
+        RecordConfiguration result = null;
+
+        RecordTestConfiguration testConfig = getRecordTestConfiguration(testClass);
+        if (testConfig != null)
+        {
+            RecordConfiguration methodConfig = testConfig.getMethodConfiguration(testClass, testMethod);
+            if (methodConfig != null)
+            {
+                result = methodConfig;
+            }
+            else
+            {
+                result = testConfig.getClassConfiguration();
+            }
+        }
+        return result;
+    }
 
     public String toXml()
     {

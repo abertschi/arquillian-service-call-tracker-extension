@@ -9,85 +9,46 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
 
-/**
- * Created by abertschi on 01/06/16.
- */
-public class RecordCallExtractor extends AbstractCallExtractor
+public class RecordCallExtractor
 {
-    public RecordCallExtractor(File sourceBaseDir, File storageBaseDir)
+    private File storageBaseDir;
+
+    public RecordCallExtractor(File storageBaseDir)
     {
-        super(sourceBaseDir, storageBaseDir);
+        this.storageBaseDir = storageBaseDir;
     }
 
     public RecordConfiguration extractClassConfiguration(TestClass testClass)
     {
-        if (testClass.isAnnotationPresent(RecordCall.class))
-        {
-            RecordCall annotation = testClass.getAnnotation(RecordCall.class);
-            String hint;
-            if (annotation.value() != null && !annotation.value().isEmpty())
-            {
-                hint = annotation.value();
-            }
-            else
-            {
-                hint = testClass.getName();
-            }
-
-            File storage = extractFromSourceBase(testClass.getJavaClass(), hint);
-            if (storage == null)
-            {
-                storage = extractFromStorageBase(hint);
-            }
-            if (storage != null)
-            {
-                return new RecordConfiguration()
-                        .setName(testClass.getName())
-                        .setEnabled(annotation.enabled())
-                        .setPath(storage.getAbsolutePath())
-                        .setSourceType(annotation.sourceType())
-                        .setSkipDoubles(annotation.skipDoubles())
-                        .setMode(annotation.mode());
-            }
-        }
-        return null;
+        return testClass.isAnnotationPresent(RecordCall.class) ? extractConfiguration(testClass.getJavaClass(), null,
+                testClass.getAnnotation(RecordCall.class)) : null;
     }
 
     public List<RecordConfiguration> extractMethodConfigurations(TestClass testClass)
     {
         return $.map(Arrays.asList(testClass.getMethods(RecordCall.class)),
-                method -> extractMethodConfiguration(testClass.getJavaClass(), method, method.getAnnotation(RecordCall.class)));
+                method -> extractConfiguration(testClass.getJavaClass(), method, method.getAnnotation(RecordCall.class)));
     }
 
     // returns null if nothing can be extracted
-    private RecordConfiguration extractMethodConfiguration(Class<?> targetClass, Method method, RecordCall annotation)
+    private RecordConfiguration extractConfiguration(Class<?> targetClass, Method targetMethod, RecordCall annotation)
     {
-        File storage;
-        String hint;
-        if (annotation.value() != null && !annotation.value().isEmpty())
+        String hint = annotation.value();
+        if (hint == null || hint.isEmpty())
         {
-            hint = annotation.value();
+            hint = targetMethod.getName() != null ? targetMethod.getName() : targetClass.getName();
         }
-        else
+        if (!hint.endsWith(".xml"))
         {
-            hint = method.getName();
+            hint = hint.concat(".xml");
         }
+        File file = new File(this.storageBaseDir, hint);
 
-        storage = extractFromSourceBase(targetClass, hint);
-        if (storage == null)
-        {
-            storage = extractFromStorageBase(hint);
-        }
-        if (storage != null)
-        {
-            return new RecordConfiguration()
-                    .setName(targetClass.getName()) // todo:
-                    .setEnabled(annotation.enabled())
-                    .setPath(storage.getAbsolutePath())
-                    .setSourceType(annotation.sourceType())
-                    .setSkipDoubles(annotation.skipDoubles())
-                    .setMode(annotation.mode());
-        }
-        return null;
+        return new RecordConfiguration(targetClass, targetMethod)
+                .setEnabled(annotation.enabled())
+                .setPath(file.getAbsolutePath())
+                .setSourceType(annotation.sourceType())
+                .setSkipDoubles(annotation.skipDoubles())
+                .setMode(annotation.mode());
     }
 }

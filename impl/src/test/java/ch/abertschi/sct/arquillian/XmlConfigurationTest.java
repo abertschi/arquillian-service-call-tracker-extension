@@ -29,6 +29,7 @@ public class XmlConfigurationTest
 
     @Test
     @RecordCall
+    @ReplayCall("storage.xml")
     public void storage()
     {
         System.out.println("test");

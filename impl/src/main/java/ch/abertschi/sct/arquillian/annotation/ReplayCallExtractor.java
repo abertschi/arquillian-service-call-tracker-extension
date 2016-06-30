@@ -13,11 +13,72 @@ import java.util.List;
 /**
  * Created by abertschi on 01/06/16.
  */
-public class ReplayCallExtractor extends AbstractCallExtractor
+public class ReplayCallExtractor
 {
+    private final File sourceBaseDir;
+    private final File storageBaseDir;
+
     public ReplayCallExtractor(File sourceBaseDir, File storageBaseDir)
     {
-        super(sourceBaseDir, storageBaseDir);
+        this.storageBaseDir = storageBaseDir;
+        this.sourceBaseDir = sourceBaseDir;
+    }
+
+    private File getStorageFile(File baseDir, String hint)
+    {
+        File storage = new File(baseDir, hint);
+        //System.out.println(storage);
+        if (storage.exists())
+        {
+            return storage;
+        }
+        // look for lower case only
+        storage = new File(baseDir, hint.toLowerCase());
+        if (storage.exists())
+        {
+            return storage;
+        }
+        // look for camel_case
+        String underline = hint.replaceAll("(.)(\\p{Upper})", "$1_$2").toLowerCase();
+        storage = new File(baseDir, underline);
+        if (storage.exists())
+        {
+            return storage;
+        }
+        return null;
+    }
+
+
+    private File extractFromSourceBase(Class testClass, String hint)
+    {
+        String packageName = testClass.getPackage().getName().replace(".", "/");
+        File baseDir = new File(this.sourceBaseDir, packageName);
+        System.out.println(baseDir);
+        File storage = null;
+        if (hint != null && !hint.trim().isEmpty())
+        {
+            System.out.println(hint);
+            storage = getStorageFile(baseDir, hint);
+            if (storage == null && !hint.endsWith(".xml"))
+            {
+                storage = getStorageFile(baseDir, hint.concat(".xml"));
+            }
+        }
+        return storage;
+    }
+
+    private File extractFromStorageBase(String hint)
+    {
+        File storage = null;
+        if (hint != null && !hint.trim().isEmpty())
+        {
+            storage = getStorageFile(this.storageBaseDir, hint);
+            if (storage == null && !hint.endsWith(".xml"))
+            {
+                storage = getStorageFile(this.storageBaseDir, hint.concat(".xml"));
+            }
+        }
+        return storage;
     }
 
     public ReplayConfiguration extractClassConfiguration(TestClass testClass)
@@ -31,7 +92,6 @@ public class ReplayCallExtractor extends AbstractCallExtractor
     {
         return $.map(Arrays.asList(testClass.getMethods(ReplayCall.class)),
                 method -> {
-                    System.out.println("metho" + method.getName().toString());
                     return extractConfiguration(testClass.getJavaClass(), method, method.getAnnotation(ReplayCall.class), true);
                 });
     }
@@ -57,8 +117,7 @@ public class ReplayCallExtractor extends AbstractCallExtractor
         }
         if (storage != null)
         {
-            return new ReplayConfiguration()
-                    .setName(hint)
+            return new ReplayConfiguration(targetClass, targetMethod)
                     .setEnabled(annotation.enabled())
                     .setPath(storage.getAbsolutePath())
                     .setSourceType(annotation.sourceType())

@@ -1,7 +1,9 @@
 package ch.abertschi.sct.arquillian;
 
 import ch.abertschi.sct.arquillian.annotation.ReplayConfiguration;
+import com.github.underscore.$;
 
+import java.lang.reflect.Method;
 import java.util.List;
 
 /**
@@ -13,11 +15,17 @@ public class ReplayTestConfiguration
 
     private List<ReplayConfiguration> methodConfigurations;
 
-    private String origin;
+    private String testClassName;
 
-    public static String createOrigin(Class<?> type)
+    public ReplayTestConfiguration(Class<?> testClass)
     {
-        return type.getCanonicalName();
+        this.testClassName = testClass.getName();
+    }
+
+    public ReplayConfiguration getMethodConfiguration(Class<?> testClass, Method testMethod)
+    {
+        List<ReplayConfiguration> config = $.filter(methodConfigurations, method -> method.isOrigin(testClass, testMethod));
+        return $.isEmpty(config) ? null : config.get(0);
     }
 
     public List<ReplayConfiguration> getMethodConfigurations()
@@ -42,14 +50,14 @@ public class ReplayTestConfiguration
         return this;
     }
 
-    public String getOrigin()
+    public String getTestClassName()
     {
-        return origin;
+        return testClassName;
     }
 
-    public ReplayTestConfiguration setOrigin(String origin)
+    public boolean isTestClass(Class<?> testClass)
     {
-        this.origin = origin;
-        return this;
+        return testClass.getName().equals(this.testClassName);
     }
+
 }

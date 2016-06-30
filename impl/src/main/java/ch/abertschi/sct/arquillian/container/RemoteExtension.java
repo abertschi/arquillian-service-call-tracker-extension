@@ -16,10 +16,8 @@ public class RemoteExtension implements RemoteLoadableExtension
     @Override
     public void register(ExtensionBuilder builder)
     {
-        builder.observer(RemoteArchiveProcessor.class);
-
-       // builder.observer(SctConfigurationEnricher.class)
-         //       .observer(RemoteResourceProcessor.class)
-           //     .observer(CommandServiceProducer.class);
+        builder.observer(RemoteArchiveProcessor.class)
+                .observer(ServiceCallTrackerConfigurator.class)
+                .observer(CommandServiceProducer.class);
     }
 }

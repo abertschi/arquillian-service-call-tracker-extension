@@ -16,8 +16,8 @@ public class ArchiveAppender implements AuxiliaryArchiveAppender
     {
         return ShrinkWrap
                 .create(JavaArchive.class, "arquillian-service-call-tracker-extension.jar")
-                .addPackages(true, "ch.abertschi.sct.arquillian") //, Filters.exclude(getClass().getPackage()),
-                .addAsServiceProvider(RemoteExtension.class, RemoteLoadableExtension.class)
+                .addPackages(true, "ch.abertschi.sct.arquillian")
+                .addAsServiceProvider(RemoteLoadableExtension.class, RemoteExtension.class)
                 .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
     }
 }

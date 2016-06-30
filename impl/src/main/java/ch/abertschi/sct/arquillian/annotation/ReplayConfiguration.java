@@ -2,6 +2,8 @@ package ch.abertschi.sct.arquillian.annotation;
 
 import ch.abertschi.sct.api.Configuration;
 
+import java.lang.reflect.Method;
+
 /**
  * Created by abertschi on 01/06/16.
  */
@@ -9,7 +11,7 @@ public class ReplayConfiguration
 {
     private boolean enabled;
 
-    private String name;
+    private String origin;
 
     private boolean throwExceptionOnNotFound;
 
@@ -18,6 +20,21 @@ public class ReplayConfiguration
     private Configuration.INPUT_SOURCE sourceType;
 
     private String path;
+
+    public ReplayConfiguration(Class<?> testClass, Method testMethod)
+    {
+        this.origin = createOrigin(testClass, testMethod);
+    }
+
+    private String createOrigin(Class<?> type, Method method)
+    {
+        return String.format("%s%s", type, method != null ? method.getName() : "");
+    }
+
+    public boolean isOrigin(Class<?> type, Method method)
+    {
+        return createOrigin(type, method).equals(this.origin);
+    }
 
     public String getPath()
     {
@@ -52,14 +69,14 @@ public class ReplayConfiguration
         return this;
     }
 
-    public String getName()
+    public String getOrigin()
     {
-        return name;
+        return origin;
     }
 
-    public ReplayConfiguration setName(String name)
+    public ReplayConfiguration setOrigin(String origin)
     {
-        this.name = name;
+        this.origin = origin;
         return this;
     }
 

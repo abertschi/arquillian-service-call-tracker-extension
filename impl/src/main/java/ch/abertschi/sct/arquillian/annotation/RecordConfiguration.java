@@ -2,6 +2,8 @@ package ch.abertschi.sct.arquillian.annotation;
 
 import ch.abertschi.sct.api.Configuration;
 
+import java.lang.reflect.Method;
+
 /**
  * Created by abertschi on 01/06/16.
  */
@@ -9,9 +11,11 @@ public class RecordConfiguration
 {
     private boolean enabled;
 
-    private String name;
+    private String origin;
 
     private String path;
+
+    private String containerPath;
 
     private Configuration.INPUT_SOURCE sourceType;
 
@@ -19,9 +23,19 @@ public class RecordConfiguration
 
     private boolean skipDoubles;
 
-    public RecordConfiguration()
+    public RecordConfiguration(Class<?> testClass, Method testMethod)
     {
+        this.origin = createOrigin(testClass, testMethod);
+    }
 
+    private String createOrigin(Class<?> type, Method method)
+    {
+        return String.format("%s%s", type, method != null ? method.getName() : "");
+    }
+
+    public boolean isOrigin(Class<?> type, Method method)
+    {
+        return createOrigin(type, method).equals(this.origin);
     }
 
     public boolean isEnabled()
@@ -46,16 +60,11 @@ public class RecordConfiguration
         return this;
     }
 
-    public String getName()
+    public String getOrigin()
     {
-        return name;
+        return origin;
     }
 
-    public RecordConfiguration setName(String name)
-    {
-        this.name = name;
-        return this;
-    }
 
     public String getPath()
     {
@@ -87,6 +96,17 @@ public class RecordConfiguration
     public RecordConfiguration setSourceType(Configuration.INPUT_SOURCE sourceType)
     {
         this.sourceType = sourceType;
+        return this;
+    }
+
+    public String getContainerPath()
+    {
+        return containerPath;
+    }
+
+    public RecordConfiguration setContainerPath(String containerPath)
+    {
+        this.containerPath = containerPath;
         return this;
     }
 }
