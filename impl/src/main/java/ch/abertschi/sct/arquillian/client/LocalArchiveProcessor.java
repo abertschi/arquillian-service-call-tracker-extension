@@ -56,9 +56,13 @@ public class LocalArchiveProcessor implements ApplicationArchiveProcessor
     Instance<Descriptor> descriptor;
 
 
-    public void init(@Observes(precedence = 50) BeforeClass before)
+    public void before(@Observes(precedence = 50) BeforeClass before)
     {
         this.instanceProducer.set(this);
+    }
+
+    private void init()
+    {
         this.replayingStorage = new File(new File("."), descriptor.get().getProperty(Constants.PROPERTY_REPLAYING_STORAGE_DIRECTORY));
         this.recordingStorage = new File(new File("."), descriptor.get().getProperty(Constants.PROPERTY_RECORDING_STORAGE_DIRECTORY));
         this.sourceBase = new File(new File("."), descriptor.get().getProperty(Constants.PROPERTY_SOURCE_DIRECTORY));
@@ -75,6 +79,7 @@ public class LocalArchiveProcessor implements ApplicationArchiveProcessor
         {
             throw new IllegalArgumentException("Source Directory for service call tracker is not set in arquillian.xml");
         }
+        init();
         if (descriptor.get().getBooleanProperty(Constants.PROPERTY_SUITE_EXTENSION))
         {
             List<TestClass> classes = TestClassScanner.GET.findTestClassAnnotatedBy(RecordCall.class);
@@ -134,6 +139,9 @@ public class LocalArchiveProcessor implements ApplicationArchiveProcessor
 
     private ReplayTestConfiguration extractReplaying(TestClass testClass)
     {
+        System.out.println(descriptor.get().getProperty(Constants.PROPERTY_SOURCE_DIRECTORY));
+        System.out.println(sourceBase.getAbsolutePath());
+        System.out.println(replayingStorage.getAbsolutePath());
         ReplayCallExtractor replayExtractor = new ReplayCallExtractor(sourceBase, replayingStorage);
         ReplayConfiguration replayClassConfig = replayExtractor.extractClassConfiguration(testClass);
         List<ReplayConfiguration> replayMethodConfigs = replayExtractor.extractMethodConfigurations(testClass);

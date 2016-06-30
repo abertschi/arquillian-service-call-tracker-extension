@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>ch.abertschi.sct.arquillian</groupId>
 		<artifactId>arquillian-service-call-tracker-extension</artifactId>
-		<version>0.0.2-alpha1-SNAPSHOT</version>
+		<version>0.0.2-alpha2</version>
 	</parent>
 	
 	<artifactId>arquillian-service-call-tracker-extension-api</artifactId>
