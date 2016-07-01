@@ -10,7 +10,7 @@
     <extension qualifier="serviceCallTracker">
         <property name="recordingEnabled">true</property>
 
-        <property name="recordingSourceType"></property>
+        <property name="useSuiteExtension">true</property>
         <property name="recordingMode"></property>
         <property name="replayingEnabled">true</property>
 

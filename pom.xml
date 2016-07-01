@@ -10,7 +10,7 @@
 
 	<groupId>ch.abertschi.sct.arquillian</groupId>
 	<artifactId>arquillian-service-call-tracker-extension</artifactId>
-	<version>0.0.2-alpha2</version>
+	<version>0.0.2-alpha9</version>
 	<packaging>pom</packaging>
 
 	<properties>

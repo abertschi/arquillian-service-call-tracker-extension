@@ -48,12 +48,13 @@ public class LocalArchiveProcessor implements ApplicationArchiveProcessor
     private File replayingStorage;
     private File sourceBase;
 
+
+    @Inject
+    private Instance<LocalExtension.Descriptor> descriptor;
+
     @Inject
     @SuiteScoped
     InstanceProducer<LocalArchiveProcessor> instanceProducer;
-
-    @Inject
-    Instance<Descriptor> descriptor;
 
 
     public void before(@Observes(precedence = 50) BeforeClass before)
@@ -103,6 +104,7 @@ public class LocalArchiveProcessor implements ApplicationArchiveProcessor
         {
             processTestClass(applicationArchive, testClass);
         }
+        System.out.println("@BEAN END LOCAL ARCHIVE PROCESSOR");
     }
 
     private void processTestClass(Archive<?> applicationArchive, TestClass testClass)
@@ -111,8 +113,11 @@ public class LocalArchiveProcessor implements ApplicationArchiveProcessor
         if (descriptor.get().getBooleanProperty(Constants.PROPERTY_REPLAYING_ENABLED))
         {
             ReplayTestConfiguration replay = extractReplaying(testClass);
-            addReplayingFilesToArchive(applicationArchive, replay);
             configuration.setReplayConfigurations(Arrays.asList(replay));
+            if (!$.isEmpty(configuration.getAllRecordConfigurations()))
+            {
+                addReplayingFilesToArchive(applicationArchive, replay);
+            }
         }
         if (descriptor.get().getBooleanProperty(Constants.PROPERTY_RECORDING_ENABLED))
         {
