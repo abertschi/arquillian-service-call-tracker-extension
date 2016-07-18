@@ -17,9 +17,9 @@ public @interface ReplayCall
 
     String value() default "";
 
-    boolean throwExceptionOnNotFound() default false;
+    boolean throwExceptionOnNotFound() default true;
 
-    boolean throwExceptionOnIncompatibleReturnType() default false;
+    boolean throwExceptionOnIncompatibleReturnType() default true;
 
     Configuration.INPUT_SOURCE sourceType() default Configuration.INPUT_SOURCE.SINGLE_FILE;
 }

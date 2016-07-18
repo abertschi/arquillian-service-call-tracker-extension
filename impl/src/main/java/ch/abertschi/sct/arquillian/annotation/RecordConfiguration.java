@@ -30,7 +30,7 @@ public class RecordConfiguration
 
     private String createOrigin(Class<?> type, Method method)
     {
-        return String.format("%s%s", type, method != null ? method.getName() : "");
+        return String.format("%s%s", type.getName(), method != null ? method.getName() : "");
     }
 
     public boolean isOrigin(Class<?> type, Method method)

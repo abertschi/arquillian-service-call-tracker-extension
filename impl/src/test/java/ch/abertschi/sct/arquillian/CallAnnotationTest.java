@@ -34,7 +34,6 @@ public class CallAnnotationTest
         Assert.assertFalse(config.isReplayingEnabled());
     }
 
-
     @Test
     @RecordCall
     public void recording_enabled()
@@ -51,6 +50,7 @@ public class CallAnnotationTest
         Configuration config = SctConfigurator.getInstance().getConfiguration();
         Assert.assertFalse(config.isRecordingEnabled());
         Assert.assertTrue(config.isReplayingEnabled());
+        Assert.assertNotNull(config.getReplayingSource());
     }
 
 }

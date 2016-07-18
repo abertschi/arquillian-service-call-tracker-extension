@@ -22,3 +22,4 @@ cvslog.*
 *.iml
 impl/out.zip
 ch.abertschi.sct.arquillian.CallAnnotationClassTest.xml
+export*.zip

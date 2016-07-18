@@ -35,6 +35,23 @@ public class ExtensionConfiguration
         return recordings;
     }
 
+    public List<ReplayConfiguration> getAllReplayingConfigurations()
+    {
+        List<ReplayConfiguration> replayings = new ArrayList<>();
+        for (ReplayTestConfiguration testConfig : replayConfigurations)
+        {
+            if (testConfig.getClassConfiguration() != null)
+            {
+                replayings.add(testConfig.getClassConfiguration());
+            }
+            if (!$.isEmpty(testConfig.getMethodConfigurations()))
+            {
+                replayings.addAll(testConfig.getMethodConfigurations());
+            }
+        }
+        return replayings;
+    }
+
     public ReplayTestConfiguration getReplayTestConfiguration(Class<?> testClass)
     {
         List<ReplayTestConfiguration> config = $.filter(replayConfigurations, replayConfig -> replayConfig.isTestClass(testClass));

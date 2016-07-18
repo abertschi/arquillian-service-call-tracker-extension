@@ -104,7 +104,6 @@ public class LocalArchiveProcessor implements ApplicationArchiveProcessor
         {
             processTestClass(applicationArchive, testClass);
         }
-        System.out.println("@BEAN END LOCAL ARCHIVE PROCESSOR");
     }
 
     private void processTestClass(Archive<?> applicationArchive, TestClass testClass)
@@ -114,7 +113,7 @@ public class LocalArchiveProcessor implements ApplicationArchiveProcessor
         {
             ReplayTestConfiguration replay = extractReplaying(testClass);
             configuration.setReplayConfigurations(Arrays.asList(replay));
-            if (!$.isEmpty(configuration.getAllRecordConfigurations()))
+            if (!$.isEmpty(configuration.getAllReplayingConfigurations()))
             {
                 addReplayingFilesToArchive(applicationArchive, replay);
             }
@@ -144,9 +143,10 @@ public class LocalArchiveProcessor implements ApplicationArchiveProcessor
 
     private ReplayTestConfiguration extractReplaying(TestClass testClass)
     {
-        System.out.println(descriptor.get().getProperty(Constants.PROPERTY_SOURCE_DIRECTORY));
-        System.out.println(sourceBase.getAbsolutePath());
-        System.out.println(replayingStorage.getAbsolutePath());
+        LOG.debug(descriptor.get().getProperty(Constants.PROPERTY_SOURCE_DIRECTORY));
+        LOG.debug(sourceBase.getAbsolutePath());
+        LOG.debug(replayingStorage.getAbsolutePath());
+
         ReplayCallExtractor replayExtractor = new ReplayCallExtractor(sourceBase, replayingStorage);
         ReplayConfiguration replayClassConfig = replayExtractor.extractClassConfiguration(testClass);
         List<ReplayConfiguration> replayMethodConfigs = replayExtractor.extractMethodConfigurations(testClass);
@@ -168,10 +168,14 @@ public class LocalArchiveProcessor implements ApplicationArchiveProcessor
             replayings.add(config.getClassConfiguration());
         }
 
+        LOG.trace(new XStream().toXML(replayings));
+
         JavaArchive resources = ShrinkWrap.create(JavaArchive.class);
         $.forEach(replayings, r -> {
-            resources.add(new FileAsset(new File(r.getPath())), r.getOrigin());
-            r.setPath(r.getOrigin());
+            LOG.trace(r.getPath());
+            String archivePath = Constants.CONFIGURATION_PATH + r.getOrigin();
+            resources.add(new FileAsset(new File(r.getPath())), archivePath);
+            r.setPath(archivePath);
         });
         merge(rootArchive, resources);
     }

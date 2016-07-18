@@ -13,7 +13,6 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Retention(RUNTIME)
 public @interface RecordCall
 {
-
     boolean enabled() default true;
 
     String value() default "";

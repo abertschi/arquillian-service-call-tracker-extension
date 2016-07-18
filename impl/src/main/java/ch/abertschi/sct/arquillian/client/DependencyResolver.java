@@ -14,9 +14,7 @@ public class DependencyResolver implements ProtocolArchiveProcessor
 {
     private static final Logger LOG = LoggerFactory.getLogger(DependencyResolver.class);
 
-    private static final String SCT_IMPL = "ch.abertschi.sct:service-call-tracker-impl:" + "0.1.0-alpha7";
-
-    private static final String SCT_API = "ch.abertschi.sct:service-call-tracker-api:" + "0.1.0-alpha7";
+    private static final String SCT_IMPL = "ch.abertschi.sct:service-call-tracker-impl:" + "0.1.0-alpha17";
 
     private static final String COMMONS_IO = "commons-io:commons-io:2.4";
 
@@ -27,9 +25,9 @@ public class DependencyResolver implements ProtocolArchiveProcessor
         {
             LibraryContainer<?> container = (LibraryContainer<?>) archive;
             for (File f : ResolverUtil.get()
-                    .resolve(SCT_IMPL, SCT_API, COMMONS_IO).withTransitivity().asFile())
+                    .resolve(SCT_IMPL, COMMONS_IO).withTransitivity().asFile())
             {
-                LOG.info("arquillian service call tracker adding extension dependency to archive " + f.getAbsolutePath());
+                LOG.debug("arquillian service call tracker adding extension dependency to archive " + f.getAbsolutePath());
                 container.addAsLibraries(f);
             }
         }
