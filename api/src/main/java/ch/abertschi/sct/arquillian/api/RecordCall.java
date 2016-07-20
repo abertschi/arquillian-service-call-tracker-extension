@@ -23,5 +23,5 @@ public @interface RecordCall
 
     Configuration.RECORDING_MODE mode() default Configuration.RECORDING_MODE.OVERWRITE;
 
-    boolean skipDoubles() default true;
+    //boolean skipDoubles() default true;
 }

@@ -48,7 +48,7 @@ public class RecordCallExtractor
                 .setEnabled(annotation.enabled())
                 .setPath(file.getAbsolutePath())
                 .setSourceType(annotation.sourceType())
-                .setSkipDoubles(annotation.skipDoubles())
+                //.setSkipDoubles(annotation.skipDoubles())
                 .setMode(annotation.mode());
     }
 }

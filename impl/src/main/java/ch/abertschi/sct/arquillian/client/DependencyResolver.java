@@ -14,7 +14,7 @@ public class DependencyResolver implements ProtocolArchiveProcessor
 {
     private static final Logger LOG = LoggerFactory.getLogger(DependencyResolver.class);
 
-    private static final String SCT_IMPL = "ch.abertschi.sct:service-call-tracker-impl:" + "0.1.0-alpha17";
+    private static final String SCT_IMPL = "ch.abertschi.sct:service-call-tracker-impl:" + "0.1.0-alpha18";
 
     private static final String COMMONS_IO = "commons-io:commons-io:2.4";
 

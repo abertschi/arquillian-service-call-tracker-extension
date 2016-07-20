@@ -41,6 +41,8 @@ public class ServiceCallTrackerConfigurator
     @Inject
     private Instance<CommandService> commandService;
 
+    private XStream xStream = new XStream();
+
     public void init(@Observes BeforeSuite before)
     {
     }
@@ -73,6 +75,8 @@ public class ServiceCallTrackerConfigurator
                     .setThrowExceptionOnIncompatibleReturnType(replaying.isThrowExceptionOnIncompatibleReturnType())
                     .setThrowExceptionOnNotFound(replaying.isThrowExceptionOnNotFound());
         }
+
+        LOG.debug("Initializing SctConfigurator with configuration: \n" + xStream.toXML(config));
     }
 
     public void afterTest(@Observes AfterSuite after)
