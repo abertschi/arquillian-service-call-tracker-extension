@@ -24,11 +24,12 @@ public class ResourceCommandReceiver
         command.setResult(Boolean.TRUE);
         File f = new File(command.getPath());
         f.getParentFile().mkdirs();
-        if (f.exists())
+        if (f.exists() && !command.isAppend())
         {
             f.delete();
         }
-        LOG.info(String.format("Recording to %s", command.getPath()));
-        Files.write(Paths.get(f.toURI()), command.getContent().getBytes(), StandardOpenOption.CREATE_NEW);
+        LOG.info(String.format("Recording calls to %s", command.getPath()));
+        StandardOpenOption open = command.isAppend() ? StandardOpenOption.APPEND : StandardOpenOption.CREATE_NEW;
+        Files.write(Paths.get(f.toURI()), command.getContent().getBytes(), open);
     }
 }

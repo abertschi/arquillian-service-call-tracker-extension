@@ -1,14 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <arquillian xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns="http://jboss.org/schema/arquillian"
-	xsi:schemaLocation="http://jboss.org/schema/arquillian http://jboss.org/schema/arquillian/arquillian_1_0.xsd">
-	
-	<engine>
-		<property name="deploymentExportPath">target/deployments</property>
-	</engine>
+            xmlns="http://jboss.org/schema/arquillian"
+            xsi:schemaLocation="http://jboss.org/schema/arquillian http://jboss.org/schema/arquillian/arquillian_1_0.xsd">
 
-	<extension qualifier="asct">
-		<!--<property name="asctLoadingHome"></property>-->
-		<!--<property name="asctRecordingHome"></property>-->
-	</extension>
+    <engine>
+        <property name="deploymentExportPath">target/deployments</property>
+    </engine>
+
+    <extension qualifier="serviceCallTracker">
+        <property name="recordingEnabled">true</property>
+
+        <property name="useSuiteExtension">true</property>
+        <property name="recordingMode"></property>
+        <property name="replayingEnabled">true</property>
+
+        <property name="replayingSourceType"></property>
+        <property name="replayingSkipDoubles">true</property>
+
+        <property name="throwExceptionOnNotFound">true</property>
+        <property name="throwExceptionOnIncompatibleReturnType">true</property>
+
+        <property name="sourceDirectory">./src/test/java</property>
+        <property name="recordingStorageDirectory">./src/test/resources</property>
+        <property name="replayingStorageDirectory">./src/test/resources</property>
+
+    </extension>
 </arquillian>

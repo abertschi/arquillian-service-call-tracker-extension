@@ -15,7 +15,6 @@ import org.jboss.arquillian.test.spi.event.suite.BeforeSuite;
  */
 public class CommandServiceProducer
 {
-
     @Inject
     private Instance<ServiceLoader> serviceLoaderInstance;
 
@@ -39,5 +38,4 @@ public class CommandServiceProducer
 
         commandServiceProducer.set(commandService);
     }
-
 }
