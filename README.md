@@ -127,9 +127,9 @@ ServiceCallTracker serviceCallTracker = new ServiceCallTracker(config);
  - default: `./'
  - The root directory to look for replaying storage files. Storage files are first searched in the directory of your test class and then at this location.
 
-
+### Big-Picture
  
- 
+![big picture](https://raw.githubusercontent.com/abertschi/service-call-tracker/master/bigpicture.png)
 
 
  
