@@ -116,13 +116,12 @@ ServiceCallTracker serviceCallTracker = new ServiceCallTracker(config);
  - Throw exception if return type of intercepted method does not match with stored response. If set to `false`, service-call-tracker will execute method implementation instead.
  
 - `sourceDirectory`:
- - default: `./'
+ - default: `./src/main/java'
  - The root directory of your test soure code.
 
 - `recordingStorageDirectory`:
  - default: `./'
  - The root directory to look for recording storage files. Storage files are first searched in the directory of your test class and then at this location.
-
 
 - `replayingStorageDirectory`:
  - default: `./'
