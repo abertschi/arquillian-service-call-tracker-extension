@@ -101,7 +101,6 @@ ServiceCallTracker serviceCallTracker = new ServiceCallTracker(config);
 
 - `recordingEnabled`:
  - default: true
- - optional: yes
  - Enable the recording feature (activated with `@RecordCall` in code)
  
 - `replayingEnabled`:
