@@ -6,7 +6,7 @@
 
 # service-call-tracker extension for JBoss Arquillian
 
-This is an JBoss Arquillian extension for [service-call-tracker](https://github.com/abertschi/service-call-tracker).
+This is the JBoss Arquillian extension for [service-call-tracker](https://github.com/abertschi/service-call-tracker).
 
 ## Getting started
 
